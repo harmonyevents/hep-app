@@ -1,0 +1,171 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Sora:wght@300;400;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
+
+@theme {
+  --color-deep: #051C2C;
+  --color-mid: #0A2D4D;
+  --color-vivid: #2251FF;
+  --color-vlight: #4D70FF;
+  --color-sky: #BDD7EE;
+  --color-gold: #C9A96E;
+  --color-success: #22c55e;
+  --color-warn: #f59e0b;
+  --color-error: #ef4444;
+
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'Sora', sans-serif;
+  --font-mono: 'Space Mono', monospace;
+}
+
+@layer base {
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+  body {
+    background-color: #051C2C;
+    /* Subtle atmospheric depth — breaks the flat-dark look */
+    background-image:
+      radial-gradient(ellipse 90% 70% at 8% 30%, rgba(8, 28, 50, 0.85) 0%, transparent 65%),
+      radial-gradient(ellipse 50% 40% at 90% 80%, rgba(34, 81, 255, 0.03) 0%, transparent 60%);
+    color: #EAF0F8;
+    font-family: 'Sora', sans-serif;
+    overflow-x: hidden;
+    line-height: 1.65;
+  }
+  /* Grain overlay — adds texture, kills the flat plastic feel */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9998;
+    opacity: 0.028;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280'%3E%3Cfilter id='n' x='0' y='0'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='280' height='280' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+    background-size: 280px 280px;
+  }
+  #root { min-height: 100svh; }
+  ::selection { background: rgba(34,81,255,0.6); color: #fff; }
+  ::-webkit-scrollbar { width: 3px; }
+  ::-webkit-scrollbar-track { background: #051C2C; }
+  ::-webkit-scrollbar-thumb { background: rgba(34,81,255,0.4); border-radius: 2px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(34,81,255,0.7); }
+}
+
+@layer utilities {
+  .font-display { font-family: 'Cormorant Garamond', Georgia, serif; }
+  .font-mono-hep { font-family: 'Space Mono', monospace; }
+
+  .glass {
+    background: rgba(10,45,77,0.35);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+  .glass-dark {
+    background: rgba(5,28,44,0.92);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+  }
+  .border-vivid-subtle { border: 1px solid rgba(34,81,255,0.18); }
+  .glow-vivid { box-shadow: 0 0 32px rgba(34,81,255,0.35); }
+  .text-muted-hep { color: rgba(189,215,238,0.55); }
+  .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+  .scrollbar-hide::-webkit-scrollbar { display: none; }
+
+  .grid-bg {
+    background-image:
+      linear-gradient(rgba(34,81,255,.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(34,81,255,.05) 1px, transparent 1px);
+    background-size: 64px 64px;
+  }
+}
+
+@keyframes grid-drift { 0% { transform: translate(0,0); } 100% { transform: translate(64px,64px); } }
+@keyframes orb-pulse { from { transform: scale(1); opacity: .7; } to { transform: scale(1.12); opacity: 1; } }
+@keyframes shimmer-line { to { left: 100%; } }
+@keyframes ping-dot {
+  0%,100% { opacity: 1; box-shadow: 0 0 8px #22c55e; }
+  50% { opacity: .5; box-shadow: 0 0 3px #22c55e; }
+}
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes slide-in-right {
+  from { opacity: 0; transform: translateX(32px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* ── New enhanced animations ─────────────────────────────────────────── */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+@keyframes float-y {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-10px); }
+}
+@keyframes float-y-slow {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-16px); }
+}
+@keyframes gradient-x {
+  0%, 100% { background-position: 0% 50%; }
+  50%       { background-position: 100% 50%; }
+}
+@keyframes shimmer-pass {
+  from { transform: translateX(-100%) skewX(-12deg); }
+  to   { transform: translateX(350%) skewX(-12deg); }
+}
+@keyframes border-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(34,81,255,0.4); }
+  50%       { box-shadow: 0 0 0 6px rgba(34,81,255,0); }
+}
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.92); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes spotlight-rotate {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* ── Utility classes ─────────────────────────────────────────────────── */
+@layer utilities {
+  .animate-float    { animation: float-y 6s ease-in-out infinite; }
+  .animate-float-slow { animation: float-y-slow 9s ease-in-out infinite; }
+  .animate-marquee  { animation: marquee linear infinite; }
+  .animate-scale-in { animation: scale-in 0.4s ease forwards; }
+
+  .text-gradient {
+    background: linear-gradient(135deg, #4D70FF 0%, #BDD7EE 55%, #2251FF 100%);
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradient-x 5s ease infinite;
+  }
+
+  .bg-vivid-gradient {
+    background: linear-gradient(135deg, #2251FF 0%, #4D70FF 100%);
+  }
+
+  .glow-vivid-lg {
+    box-shadow: 0 0 40px rgba(34,81,255,0.35), 0 0 80px rgba(34,81,255,0.12);
+  }
+
+  .border-gradient-vivid {
+    position: relative;
+  }
+  .border-gradient-vivid::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    background: linear-gradient(135deg, rgba(34,81,255,0.6) 0%, rgba(77,112,255,0.2) 50%, rgba(34,81,255,0.6) 100%);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    padding: 1px;
+    pointer-events: none;
+  }
+}
