@@ -1,26 +1,14 @@
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Inter:wght@300;400;500;600;700&family=Sora:wght@300;400;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Noto+Sans+Tamil:wght@300;400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@300;400;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Noto+Sans+Tamil:wght@300;400;600;700&display=swap');
 
 @theme {
-  --color-deep: #051C2C;
-  --color-mid: #0A2D4D;
-  --color-vivid: #2251FF;
-  --color-vlight: #4D70FF;
-  --color-sky: #BDD7EE;
-  --color-gold: #C9A96E;
-  --color-gold-light: #E8C98A;
-  --color-success: #22c55e;
-  --color-warn: #f59e0b;
-  --color-error: #ef4444;
-
-  /* Design system navy/champagne palette */
-  --color-navy: #031635;
-  --color-navy-mid: #1a2b4b;
-  --color-champagne: #D4AF37;
-  --color-champagne-light: #fed65b;
-
-  --font-display: 'Cormorant Garamond', Georgia, serif;
-  --font-body: 'Inter', 'Sora', sans-serif;
+  --color-navy:      #031635;
+  --color-navy-mid:  #1a2b4b;
+  --color-gold:      #D4AF37;
+  --color-success:   #22c55e;
+  --color-warn:      #f59e0b;
+  --color-error:     #ba1a1a;
+  --font-sans: 'Inter', 'Sora', ui-sans-serif, system-ui, sans-serif;
   --font-mono: 'Space Mono', monospace;
 }
 
@@ -28,186 +16,49 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
   body {
-    background-color: #f7f9fb;
-    color: #191c1e;
-    font-family: 'Inter', 'Sora', sans-serif;
+    background-color: #F5F5F5;
+    color: #0A0A0A;
+    font-family: 'Inter', 'Sora', ui-sans-serif, system-ui, sans-serif;
     overflow-x: hidden;
-    line-height: 1.65;
+    line-height: 1.6;
   }
   :lang(ta) body, html:lang(ta) body {
-    font-family: 'Noto Sans Tamil', 'Sora', sans-serif;
-  }
-  /* Grain overlay — adds texture, kills the flat plastic feel */
-  body::after {
-    content: '';
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 9998;
-    opacity: 0.028;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280'%3E%3Cfilter id='n' x='0' y='0'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='280' height='280' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
-    background-size: 280px 280px;
+    font-family: 'Noto Sans Tamil', 'Inter', sans-serif;
   }
   #root { min-height: 100svh; }
-  ::selection { background: rgba(34,81,255,0.15); color: #0D1B2A; }
+  ::selection { background: rgba(212,175,55,0.20); color: #0A0A0A; }
   ::-webkit-scrollbar { width: 3px; }
-  ::-webkit-scrollbar-track { background: #F0EBE0; }
-  ::-webkit-scrollbar-thumb { background: rgba(201,169,110,0.5); border-radius: 2px; }
-  ::-webkit-scrollbar-thumb:hover { background: rgba(201,169,110,0.8); }
+  ::-webkit-scrollbar-track { background: #EFEFEF; }
+  ::-webkit-scrollbar-thumb { background: rgba(212,175,55,0.4); border-radius: 2px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(212,175,55,0.7); }
 }
 
 @layer utilities {
-  .font-display { font-family: 'Cormorant Garamond', Georgia, serif; }
   .font-mono-hep { font-family: 'Space Mono', monospace; }
 
   .glass {
-    background: rgba(255,255,255,0.70);
+    background: rgba(255,255,255,0.80);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border: 1px solid #E2E8F0;
-    border-radius: 8px;
+    border: 1px solid #E4E4E4;
+    border-radius: 16px;
   }
-  .glass-dark {
-    background: rgba(255,255,255,0.95);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    border: 1px solid #E2E8F0;
-    border-radius: 8px;
-  }
-  .radius-8 { border-radius: 8px; }
-  .surface-1 { background: #fff; border: 1px solid #E2E8F0; border-radius: 8px; }
-  .border-vivid-subtle { border: 1px solid rgba(34,81,255,0.18); }
-  .glow-vivid { box-shadow: 0 0 32px rgba(34,81,255,0.25); }
-  .text-muted-hep { color: rgba(74,85,104,0.8); }
+
+  .surface-1 { background: #fff; border: 1px solid #E4E4E4; border-radius: 16px; }
+
+  .text-muted-hep { color: #858585; }
   .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
   .scrollbar-hide::-webkit-scrollbar { display: none; }
 
   .grid-bg {
     background-image:
-      linear-gradient(rgba(34,81,255,.06) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(34,81,255,.06) 1px, transparent 1px);
+      linear-gradient(rgba(3,22,53,.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(3,22,53,.04) 1px, transparent 1px);
     background-size: 64px 64px;
-  }
-}
-
-@keyframes grid-drift { 0% { transform: translate(0,0); } 100% { transform: translate(64px,64px); } }
-@keyframes orb-pulse { from { transform: scale(1); opacity: .7; } to { transform: scale(1.12); opacity: 1; } }
-@keyframes shimmer-line { to { left: 100%; } }
-@keyframes ping-dot {
-  0%,100% { opacity: 1; box-shadow: 0 0 8px #22c55e; }
-  50% { opacity: .5; box-shadow: 0 0 3px #22c55e; }
-}
-@keyframes fade-up {
-  from { opacity: 0; transform: translateY(16px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-@keyframes slide-in-right {
-  from { opacity: 0; transform: translateX(32px); }
-  to { opacity: 1; transform: translateX(0); }
-}
-
-/* ── New enhanced animations ─────────────────────────────────────────── */
-@keyframes marquee {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
-}
-@keyframes float-y {
-  0%, 100% { transform: translateY(0px); }
-  50%       { transform: translateY(-10px); }
-}
-@keyframes float-y-slow {
-  0%, 100% { transform: translateY(0px); }
-  50%       { transform: translateY(-16px); }
-}
-@keyframes gradient-x {
-  0%, 100% { background-position: 0% 50%; }
-  50%       { background-position: 100% 50%; }
-}
-@keyframes shimmer-pass {
-  from { transform: translateX(-100%) skewX(-12deg); }
-  to   { transform: translateX(350%) skewX(-12deg); }
-}
-@keyframes border-pulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(34,81,255,0.4); }
-  50%       { box-shadow: 0 0 0 6px rgba(34,81,255,0); }
-}
-@keyframes scale-in {
-  from { opacity: 0; transform: scale(0.92); }
-  to   { opacity: 1; transform: scale(1); }
-}
-@keyframes spotlight-rotate {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
-}
-
-/* ── Utility classes ─────────────────────────────────────────────────── */
-@layer utilities {
-  .animate-float    { animation: float-y 6s ease-in-out infinite; }
-  .animate-float-slow { animation: float-y-slow 9s ease-in-out infinite; }
-  .animate-marquee  { animation: marquee linear infinite; }
-  .animate-scale-in { animation: scale-in 0.4s ease forwards; }
-
-  .text-gradient {
-    background: linear-gradient(135deg, #4D70FF 0%, #C9A96E 50%, #2251FF 100%);
-    background-size: 200% 200%;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    animation: gradient-x 5s ease infinite;
-  }
-
-  .text-gradient-gold {
-    background: linear-gradient(135deg, #E8C98A 0%, #C9A96E 50%, #E8C98A 100%);
-    background-size: 200% 200%;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    animation: gradient-x 4s ease infinite;
-  }
-
-  .section-warm {
-    background: radial-gradient(ellipse 80% 60% at 50% 50%, rgba(201,169,110,0.04) 0%, transparent 70%);
-  }
-
-  .section-vivid-glow {
-    background: radial-gradient(ellipse 60% 50% at 50% 50%, rgba(34,81,255,0.06) 0%, transparent 70%);
-  }
-
-  .card-3d {
-    transform-style: preserve-3d;
-    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.4s ease;
-  }
-  .card-3d:hover {
-    box-shadow: 0 24px 64px rgba(0,0,0,0.5), 0 0 40px rgba(201,169,110,0.1);
-  }
-
-  .bg-vivid-gradient {
-    background: linear-gradient(135deg, #2251FF 0%, #4D70FF 100%);
-  }
-
-  .glow-vivid-lg {
-    box-shadow: 0 0 40px rgba(34,81,255,0.35), 0 0 80px rgba(34,81,255,0.12);
-  }
-
-  .border-gradient-vivid {
-    position: relative;
-  }
-  .border-gradient-vivid::before {
-    content: '';
-    position: absolute;
-    inset: -1px;
-    border-radius: inherit;
-    background: linear-gradient(135deg, rgba(34,81,255,0.6) 0%, rgba(77,112,255,0.2) 50%, rgba(34,81,255,0.6) 100%);
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    padding: 1px;
-    pointer-events: none;
   }
 
   /* Tamil font support */
-  :lang(ta), .font-tamil { font-family: 'Noto Sans Tamil', 'Sora', sans-serif; }
+  :lang(ta), .font-tamil { font-family: 'Noto Sans Tamil', 'Inter', sans-serif; }
 
   /* Radix UI animation helpers */
   .animate-in { animation-duration: 200ms; animation-fill-mode: both; }
@@ -217,6 +68,41 @@
   .zoom-in-95 { --tw-enter-scale: 0.95; }
   .zoom-out-95 { --tw-exit-scale: 0.95; }
   .slide-in-from-top-2 { --tw-enter-translate-y: -0.5rem; }
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+@keyframes float-y {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-8px); }
+}
+@keyframes ping-dot {
+  0%,100% { opacity: 1; box-shadow: 0 0 8px #22c55e; }
+  50% { opacity: .5; box-shadow: 0 0 3px #22c55e; }
+}
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.94); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes shimmer-pass {
+  from { transform: translateX(-100%) skewX(-12deg); }
+  to   { transform: translateX(350%) skewX(-12deg); }
+}
+@keyframes spotlight-rotate {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@layer utilities {
+  .animate-float    { animation: float-y 6s ease-in-out infinite; }
+  .animate-marquee  { animation: marquee linear infinite; }
+  .animate-scale-in { animation: scale-in 0.4s ease forwards; }
 
   @keyframes enter {
     from { opacity: var(--tw-enter-opacity, 1); transform: translate(var(--tw-enter-translate-x, 0), var(--tw-enter-translate-y, 0)) scale(var(--tw-enter-scale, 1)); }

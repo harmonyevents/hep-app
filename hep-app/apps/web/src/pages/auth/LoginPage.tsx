@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { StepProgress } from '@/components/ui/Progress'
 import { useAuthStore } from '@/store/auth'
@@ -50,10 +49,7 @@ export function LoginPage() {
     setEmail(data.email)
     const result = await sendOtp(data.email)
     setIsLoading(false)
-    if (result.error) {
-      setError(result.error)
-      return
-    }
+    if (result.error) { setError(result.error); return }
     setStep('otp')
   }
 
@@ -84,50 +80,70 @@ export function LoginPage() {
     setIsLoading(true)
     const result = await updateProfile({ name: data.name, email, role })
     setIsLoading(false)
-    if (result.error) {
-      setError(result.error)
-      return
-    }
+    if (result.error) { setError(result.error); return }
     navigate(getRedirectPath(role))
   }
 
   const steps: Step[] = ['email', 'otp', 'role', 'name']
   const stepIdx = steps.indexOf(step)
+  const progressWidth = `${((stepIdx + 1) / steps.length) * 100}%`
+
+  const cardStyle: React.CSSProperties = {
+    background: '#ffffff',
+    borderRadius: 16,
+    border: '1px solid #E4E4E4',
+    padding: '2.5rem',
+    maxWidth: 448,
+    width: '100%',
+    position: 'relative',
+    overflow: 'hidden',
+  }
+
+  const submitBtnStyle: React.CSSProperties = {
+    background: '#D4AF37',
+    color: '#031635',
+    borderRadius: 9999,
+    fontWeight: 600,
+    width: '100%',
+    padding: '0.75rem 1.5rem',
+    fontSize: '0.9375rem',
+    cursor: 'pointer',
+    border: 'none',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    transition: 'opacity 0.2s',
+  }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-5 pt-24 pb-12 relative overflow-hidden">
-      <div className="absolute inset-0 grid-bg opacity-50" />
-      {/* Warm gold glow */}
-      <motion.div className="absolute w-[500px] h-[500px] rounded-full -top-24 -right-24 pointer-events-none"
-        style={{ background: 'radial-gradient(circle, rgba(201,169,110,0.08) 0%, transparent 68%)' }}
-        animate={{ scale: [1, 1.1, 1] }} transition={{ duration: 5, repeat: Infinity }} />
-      <motion.div className="absolute w-[400px] h-[400px] rounded-full bottom-0 -left-20 pointer-events-none"
-        style={{ background: 'radial-gradient(circle, rgba(34,81,255,0.06) 0%, transparent 68%)' }} />
-
-      <div className="relative z-10 w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center px-5 pt-20 pb-12" style={{ background: '#F5F5F5' }}>
+      <div style={{ width: '100%', maxWidth: 448 }}>
         {/* Logo */}
-        <div className="text-center mb-10">
+        <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center gap-3 no-underline">
-            <img src="/logo_cropped.jpg" alt="HE&P" className="w-10 h-10 brightness-0 invert" />
+            <svg viewBox="0 0 256 256" width="32" height="32" fill="#031635">
+              <path d="M 128.005 191.173 C 128.448 156.208 156.93 128 192 128 L 192 64 L 128 64 C 128 99.346 99.346 128 64 128 L 64 192 L 128 192 Z M 192 256 L 64 256 C 28.654 256 0 227.346 0 192 L 0 64 L 64 64 L 64 0 L 192 0 C 227.346 0 256 28.654 256 64 L 256 192 L 192 192 Z" />
+            </svg>
             <div className="text-left">
-              <div className="font-bold text-[0.85rem] tracking-[0.22em] uppercase">HE&amp;P</div>
-              <div className="text-[0.55rem] tracking-wide text-white/30">Harmony Events &amp; Platform</div>
+              <div className="font-semibold text-sm" style={{ color: '#031635', letterSpacing: '0.08em' }}>HE&amp;P</div>
+              <div className="text-xs" style={{ color: '#858585' }}>Harmony Events &amp; Productions</div>
             </div>
           </Link>
         </div>
 
         {/* Step indicator */}
-        <div className="mb-2 flex items-center justify-between">
-          <span className="text-[0.6rem] tracking-[0.2em] uppercase text-white/30">
+        <div className="mb-2 flex items-center justify-between px-1">
+          <span style={{ fontSize: '0.75rem', color: '#858585', letterSpacing: '0.08em' }}>
             {isTa ? `படி ${stepIdx + 1} / ${steps.length}` : `Step ${stepIdx + 1} of ${steps.length}`}
           </span>
-          <span className="text-[0.6rem] tracking-[0.2em] text-white/20">
+          <span style={{ fontSize: '0.75rem', color: '#858585' }}>
             {steps.map((s, i) => (
-              <span key={s} className={i <= stepIdx ? 'text-gold' : ''}>●</span>
+              <span key={s} style={{ color: i <= stepIdx ? '#D4AF37' : '#E4E4E4' }}>●</span>
             ))}
           </span>
         </div>
-        <StepProgress current={stepIdx} total={steps.length} className="mb-8" />
+        <StepProgress current={stepIdx} total={steps.length} className="mb-6" />
 
         <AnimatePresence mode="wait">
 
@@ -135,13 +151,16 @@ export function LoginPage() {
           {step === 'email' && (
             <motion.div key="email" initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.25 }}
-              className="glass border border-white/10 p-8"
+              style={cardStyle}
             >
-              <h2 className="font-display text-3xl font-light mb-2">
+              {/* Gold progress bar */}
+              <div style={{ position: 'absolute', top: 0, left: 0, height: 3, width: progressWidth, background: '#D4AF37', transition: 'width 0.4s ease', borderRadius: '16px 0 0 0' }} />
+
+              <h2 className="font-medium mb-2" style={{ fontSize: '2rem', letterSpacing: '-0.03em', color: '#0A0A0A' }}>
                 {isTa ? 'தொடங்குங்கள்' : 'Get started'}
               </h2>
-              <p className="text-white/45 text-sm mb-8">
-                {isTa ? 'உங்கள் மின்னஞ்சல் உள்ளிடுங்கள் — OTP அனுப்பப்படும்' : 'Enter your email — we\'ll send you a one-time code'}
+              <p className="mb-8" style={{ color: '#858585', fontSize: '1rem' }}>
+                {isTa ? 'உங்கள் மின்னஞ்சல் உள்ளிடுங்கள் — OTP அனுப்பப்படும்' : "Enter your email — we'll send you a one-time code"}
               </p>
 
               <form onSubmit={emailForm.handleSubmit(onEmailSubmit)} className="space-y-5">
@@ -153,24 +172,36 @@ export function LoginPage() {
                   error={emailForm.formState.errors.email?.message}
                   {...emailForm.register('email')}
                 />
-                {error && <p className="text-red-400 text-xs">{error}</p>}
-                <Button type="submit" loading={isLoading} className="w-full">
-                  {isTa ? 'OTP அனுப்பு' : 'Send OTP to Email'}
-                </Button>
+                {error && <p style={{ color: '#ba1a1a', fontSize: '0.875rem' }}>{error}</p>}
+                <motion.button
+                  type="submit"
+                  style={{ ...submitBtnStyle, opacity: isLoading ? 0.7 : 1 }}
+                  whileHover={{ y: -2 }}
+                  whileTap={{ scale: 0.97 }}
+                  disabled={isLoading}
+                >
+                  {isLoading
+                    ? <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                    : (isTa ? 'OTP அனுப்பு' : 'Send OTP to Email')}
+                </motion.button>
               </form>
 
-              <p className="text-center text-white/30 text-xs mt-6">
+              <p className="text-center mt-6" style={{ color: '#858585', fontSize: '0.75rem' }}>
                 {isTa ? 'தொடர்வதன் மூலம் நீங்கள்' : 'By continuing, you agree to our'}{' '}
-                <span className="text-gold/70 cursor-pointer">{isTa ? 'விதிமுறைகளை ஒப்புக்கொள்கிறீர்கள்' : 'Terms & Privacy Policy'}</span>
+                <span style={{ color: '#D4AF37', cursor: 'pointer' }}>{isTa ? 'விதிமுறைகளை ஒப்புக்கொள்கிறீர்கள்' : 'Terms & Privacy Policy'}</span>
               </p>
 
               {/* Dev shortcuts */}
-              <div className="mt-6 pt-6 border-t border-white/8 space-y-2">
-                <p className="text-[0.6rem] text-white/20 text-center tracking-widest uppercase">Dev shortcuts</p>
+              <div className="mt-6 pt-6 space-y-2" style={{ borderTop: '1px solid #E4E4E4' }}>
+                <p className="text-center tracking-widest uppercase" style={{ fontSize: '0.75rem', color: '#858585' }}>Dev shortcuts</p>
                 <div className="flex gap-2">
                   {(['consumer', 'vendor', 'admin'] as UserRole[]).map(r => (
                     <button key={r} onClick={() => { mockLogin(r); navigate(getRedirectPath(r)) }}
-                      className="flex-1 text-[0.65rem] py-1.5 border border-white/10 hover:border-gold/30 text-white/35 hover:text-gold/80 transition-all capitalize">
+                      className="flex-1 capitalize transition-all"
+                      style={{ fontSize: '0.75rem', padding: '0.375rem 0', border: '1px solid #E4E4E4', borderRadius: 8, color: '#858585', background: 'transparent', cursor: 'pointer' }}
+                      onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = '#D4AF37'; (e.currentTarget as HTMLButtonElement).style.color = '#031635' }}
+                      onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = '#E4E4E4'; (e.currentTarget as HTMLButtonElement).style.color = '#858585' }}
+                    >
                       {r}
                     </button>
                   ))}
@@ -183,15 +214,17 @@ export function LoginPage() {
           {step === 'otp' && (
             <motion.div key="otp" initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.25 }}
-              className="glass border border-white/10 p-8"
+              style={cardStyle}
             >
-              <h2 className="font-display text-3xl font-light mb-2">
+              <div style={{ position: 'absolute', top: 0, left: 0, height: 3, width: progressWidth, background: '#D4AF37', transition: 'width 0.4s ease', borderRadius: '16px 0 0 0' }} />
+
+              <h2 className="font-medium mb-2" style={{ fontSize: '2rem', letterSpacing: '-0.03em', color: '#0A0A0A' }}>
                 {isTa ? 'OTP சரிபார்க்க' : 'Check your email'}
               </h2>
-              <p className="text-white/45 text-sm mb-1">
+              <p className="mb-1" style={{ color: '#858585', fontSize: '1rem' }}>
                 {isTa ? 'இந்த மின்னஞ்சலுக்கு OTP அனுப்பப்பட்டது:' : 'We sent a 6-digit code to'}
               </p>
-              <p className="text-gold text-sm font-mono-hep mb-8">{email}</p>
+              <p className="font-mono-hep mb-8" style={{ color: '#D4AF37', fontSize: '0.9375rem' }}>{email}</p>
 
               <form onSubmit={otpForm.handleSubmit(onOtpSubmit)} className="space-y-5">
                 <Input
@@ -204,19 +237,28 @@ export function LoginPage() {
                   error={otpForm.formState.errors.otp?.message}
                   {...otpForm.register('otp')}
                 />
-                {error && <p className="text-red-400 text-xs">{error}</p>}
-                <Button type="submit" loading={isLoading} className="w-full">
-                  {isTa ? 'சரிபார்க்கவும்' : 'Verify Code'}
-                </Button>
+                {error && <p style={{ color: '#ba1a1a', fontSize: '0.875rem' }}>{error}</p>}
+                <motion.button
+                  type="submit"
+                  style={{ ...submitBtnStyle, opacity: isLoading ? 0.7 : 1 }}
+                  whileHover={{ y: -2 }}
+                  whileTap={{ scale: 0.97 }}
+                  disabled={isLoading}
+                >
+                  {isLoading
+                    ? <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                    : (isTa ? 'சரிபார்க்கவும்' : 'Verify Code')}
+                </motion.button>
               </form>
 
               <button onClick={() => { setStep('email'); setError(''); otpForm.reset() }}
-                className="w-full text-center text-white/30 text-xs mt-5 hover:text-white/60 transition-colors"
+                className="w-full text-center mt-5 transition-colors"
+                style={{ fontSize: '0.875rem', color: '#858585', background: 'none', border: 'none', cursor: 'pointer' }}
               >
                 ← {isTa ? 'மின்னஞ்சல் மாற்றவும்' : 'Change email address'}
               </button>
 
-              <p className="text-center text-white/20 text-xs mt-3">
+              <p className="text-center mt-3" style={{ fontSize: '0.75rem', color: '#858585' }}>
                 {isTa ? 'உங்கள் inbox சரிபார்க்கவும் (spam ஐயும் பாருங்கள்)' : 'Check your inbox — check spam if not seen in 1 min'}
               </p>
             </motion.div>
@@ -226,12 +268,14 @@ export function LoginPage() {
           {step === 'role' && (
             <motion.div key="role" initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.25 }}
-              className="glass border border-white/10 p-8"
+              style={cardStyle}
             >
-              <h2 className="font-display text-3xl font-light mb-2">
+              <div style={{ position: 'absolute', top: 0, left: 0, height: 3, width: progressWidth, background: '#D4AF37', transition: 'width 0.4s ease', borderRadius: '16px 0 0 0' }} />
+
+              <h2 className="font-medium mb-2" style={{ fontSize: '2rem', letterSpacing: '-0.03em', color: '#0A0A0A' }}>
                 {isTa ? 'நான் விரும்புவது...' : 'I want to...'}
               </h2>
-              <p className="text-white/45 text-sm mb-8">
+              <p className="mb-8" style={{ color: '#858585', fontSize: '1rem' }}>
                 {isTa ? 'உங்கள் பாத்திரத்தை தேர்வு செய்யுங்கள்' : 'Choose how you want to use HE&P'}
               </p>
               <div className="space-y-3">
@@ -245,15 +289,21 @@ export function LoginPage() {
                 ].map(opt => (
                   <motion.button key={opt.r} whileHover={{ x: 4 }} whileTap={{ scale: 0.98 }}
                     onClick={() => onRoleSelect(opt.r)}
-                    className={`w-full text-left p-5 border transition-all duration-200 flex items-start gap-4
-                      ${role === opt.r ? 'border-gold/50 bg-gold/8' : 'border-white/10 hover:border-gold/25 hover:bg-white/3'}`}
+                    className="w-full text-left flex items-start gap-4 transition-all duration-200"
+                    style={{
+                      padding: '1.25rem',
+                      borderRadius: 12,
+                      border: role === opt.r ? '2px solid #031635' : '1px solid #E4E4E4',
+                      background: role === opt.r ? '#031635' : '#ffffff',
+                      cursor: 'pointer',
+                    }}
                   >
                     <span className="text-2xl">{opt.icon}</span>
                     <div>
-                      <div className="font-semibold text-sm mb-1">{opt.label}</div>
-                      <div className="text-white/40 text-xs">{opt.desc}</div>
+                      <div className="font-semibold text-sm mb-1" style={{ color: role === opt.r ? '#ffffff' : '#0A0A0A' }}>{opt.label}</div>
+                      <div style={{ color: role === opt.r ? 'rgba(255,255,255,0.65)' : '#858585', fontSize: '0.875rem' }}>{opt.desc}</div>
                     </div>
-                    {role === opt.r && <span className="ml-auto text-gold">✓</span>}
+                    {role === opt.r && <span className="ml-auto" style={{ color: '#D4AF37' }}>✓</span>}
                   </motion.button>
                 ))}
               </div>
@@ -264,12 +314,14 @@ export function LoginPage() {
           {step === 'name' && (
             <motion.div key="name" initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.25 }}
-              className="glass border border-white/10 p-8"
+              style={cardStyle}
             >
-              <h2 className="font-display text-3xl font-light mb-2">
+              <div style={{ position: 'absolute', top: 0, left: 0, height: 3, width: progressWidth, background: '#D4AF37', transition: 'width 0.4s ease', borderRadius: '16px 0 0 0' }} />
+
+              <h2 className="font-medium mb-2" style={{ fontSize: '2rem', letterSpacing: '-0.03em', color: '#0A0A0A' }}>
                 {isTa ? 'கொஞ்சம் அறிமுகம்' : 'Almost there'}
               </h2>
-              <p className="text-white/45 text-sm mb-8">
+              <p className="mb-8" style={{ color: '#858585', fontSize: '1rem' }}>
                 {role === 'vendor'
                   ? (isTa ? 'உங்கள் வணிக பெயரை உள்ளிடுங்கள்' : 'Tell us your business name')
                   : (isTa ? 'உங்கள் பெயரை உள்ளிடுங்கள்' : 'What should we call you?')}
@@ -281,10 +333,18 @@ export function LoginPage() {
                   error={nameForm.formState.errors.name?.message}
                   {...nameForm.register('name')}
                 />
-                {error && <p className="text-red-400 text-xs">{error}</p>}
-                <Button type="submit" loading={isLoading} className="w-full">
-                  {isTa ? 'தொடங்குங்கள் →' : 'Get Started →'}
-                </Button>
+                {error && <p style={{ color: '#ba1a1a', fontSize: '0.875rem' }}>{error}</p>}
+                <motion.button
+                  type="submit"
+                  style={{ ...submitBtnStyle, opacity: isLoading ? 0.7 : 1 }}
+                  whileHover={{ y: -2 }}
+                  whileTap={{ scale: 0.97 }}
+                  disabled={isLoading}
+                >
+                  {isLoading
+                    ? <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                    : (isTa ? 'தொடங்குங்கள் →' : 'Get Started →')}
+                </motion.button>
               </form>
             </motion.div>
           )}

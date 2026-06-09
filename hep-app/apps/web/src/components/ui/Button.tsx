@@ -6,29 +6,24 @@ import { cn } from '@/lib/utils'
 const buttonVariants = cva(
   [
     'relative inline-flex items-center justify-center gap-2',
-    'font-body font-semibold uppercase tracking-widest',
+    'font-medium',
     'transition-all duration-200 cursor-pointer outline-none select-none overflow-hidden',
     'disabled:opacity-40 disabled:cursor-not-allowed disabled:transform-none',
   ],
   {
     variants: {
       variant: {
-        primary: [
-          'text-white',
-        ],
-        outline: [
-          'bg-transparent border',
-        ],
+        primary: ['text-white'],
+        cta: [],
+        outline: ['bg-transparent border'],
         ghost: 'bg-transparent',
-        danger: [
-          'text-white',
-        ],
+        danger: ['text-white'],
         link: 'bg-transparent underline-offset-4 hover:underline p-0 h-auto',
       },
       size: {
-        sm: 'px-4 py-2 text-[0.62rem] tracking-[0.18em]',
-        md: 'px-6 py-3 text-[0.68rem] tracking-[0.14em]',
-        lg: 'px-8 py-4 text-[0.75rem] tracking-[0.15em]',
+        sm: 'px-4 py-2 text-[0.75rem]',
+        md: 'px-6 py-3 text-[0.875rem]',
+        lg: 'px-8 py-4 text-[0.9375rem]',
         icon: 'w-9 h-9 p-0 text-sm',
       },
     },
@@ -48,14 +43,15 @@ export interface ButtonProps
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ variant = 'primary', size = 'md', loading, icon, children, className, disabled, ...props }, ref) => {
-    const isPrimary = variant === 'primary'
+    const hasShimmer = variant === 'primary' || variant === 'cta'
 
-    const primaryStyle = variant === 'primary' ? { background: '#1a2b4b', color: '#ffffff', borderRadius: 8 } : {}
-    const outlineStyle = variant === 'outline' ? { borderColor: '#1a2b4b', color: '#1a2b4b', borderRadius: 8 } : {}
-    const dangerStyle = variant === 'danger' ? { background: '#ba1a1a', color: '#ffffff', borderRadius: 8 } : {}
-    const ghostStyle = variant === 'ghost' ? { color: '#44474e' } : {}
+    const primaryStyle = variant === 'primary' ? { background: '#1a2b4b', color: '#ffffff', borderRadius: 9999 } : {}
+    const ctaStyle = variant === 'cta' ? { background: '#D4AF37', color: '#031635', borderRadius: 9999 } : {}
+    const outlineStyle = variant === 'outline' ? { borderColor: '#E4E4E4', color: '#0A0A0A', borderRadius: 9999 } : {}
+    const dangerStyle = variant === 'danger' ? { background: '#ba1a1a', color: '#ffffff', borderRadius: 9999 } : {}
+    const ghostStyle = variant === 'ghost' ? { color: '#3D3D3D' } : {}
     const linkStyle = variant === 'link' ? { color: '#1a2b4b' } : {}
-    const combinedStyle = { ...primaryStyle, ...outlineStyle, ...dangerStyle, ...ghostStyle, ...linkStyle }
+    const combinedStyle = { ...primaryStyle, ...ctaStyle, ...outlineStyle, ...dangerStyle, ...ghostStyle, ...linkStyle }
 
     return (
       <motion.button
@@ -68,7 +64,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         disabled={disabled || loading}
         {...(props as React.ComponentProps<typeof motion.button>)}
       >
-        {isPrimary && !disabled && !loading && (
+        {hasShimmer && !disabled && !loading && (
           <span className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden>
             <motion.span
               className="absolute inset-0"

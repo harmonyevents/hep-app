@@ -3,8 +3,8 @@ import { motion } from 'framer-motion'
 import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/lib/utils'
 
-const CARD_STYLE = { background: '#ffffff', border: '1px solid #E2E8F0', borderRadius: 8 }
-const CARD_ELEVATED_STYLE = { background: '#ffffff', border: '1px solid #E2E8F0', borderRadius: 8, boxShadow: '0px 10px 30px rgba(26,43,75,0.08)' }
+const CARD_STYLE = { background: '#ffffff', border: '1px solid #E4E4E4', borderRadius: 16 }
+const CARD_ELEVATED_STYLE = { background: '#ffffff', border: '1px solid #E4E4E4', borderRadius: 16, boxShadow: '0px 10px 30px rgba(26,43,75,0.08)' }
 
 const cardVariants = cva(
   'relative overflow-hidden transition-all duration-200',
@@ -56,18 +56,18 @@ Card.displayName = 'Card'
 
 export function CardHeader({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
-    <div className={cn('px-6 pt-6 pb-4', className)} style={{ borderBottom: '1px solid #E2E8F0' }}>
+    <div className={cn('px-6 pt-6 pb-4', className)} style={{ borderBottom: '1px solid #E4E4E4' }}>
       {children}
     </div>
   )
 }
 
 export function CardTitle({ children, className }: { children: React.ReactNode; className?: string }) {
-  return <h3 className={cn('font-display text-xl font-semibold', className)} style={{ color: '#031635' }}>{children}</h3>
+  return <h3 className={cn('font-medium text-xl', className)} style={{ color: '#0A0A0A' }}>{children}</h3>
 }
 
 export function CardDescription({ children, className }: { children: React.ReactNode; className?: string }) {
-  return <p className={cn('text-sm mt-1', className)} style={{ color: '#44474e' }}>{children}</p>
+  return <p className={cn('text-sm mt-1', className)} style={{ color: '#3D3D3D' }}>{children}</p>
 }
 
 export function CardContent({ children, className }: { children: React.ReactNode; className?: string }) {
@@ -76,7 +76,7 @@ export function CardContent({ children, className }: { children: React.ReactNode
 
 export function CardFooter({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
-    <div className={cn('px-6 py-4 flex items-center gap-3', className)} style={{ borderTop: '1px solid #E2E8F0' }}>
+    <div className={cn('px-6 py-4 flex items-center gap-3', className)} style={{ borderTop: '1px solid #E4E4E4' }}>
       {children}
     </div>
   )

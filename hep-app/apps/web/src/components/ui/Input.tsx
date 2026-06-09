@@ -17,15 +17,15 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         {label && (
           <label
             htmlFor={inputId}
-            className="text-[0.68rem] font-semibold tracking-[0.2em] uppercase"
-            style={{ color: '#44474e' }}
+            className="tracking-[0.08em] uppercase"
+            style={{ fontSize: '0.75rem', fontWeight: 600, color: '#858585' }}
           >
             {label}
           </label>
         )}
         <div className="relative flex items-center">
           {prefix && (
-            <span className="absolute left-3 text-sm select-none pointer-events-none" style={{ color: '#75777f' }}>
+            <span className="absolute left-3 text-sm select-none pointer-events-none" style={{ color: '#858585' }}>
               {prefix}
             </span>
           )}
@@ -33,7 +33,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             ref={ref}
             id={inputId}
             className={cn(
-              'w-full font-body text-sm px-4 py-3 outline-none transition-all duration-200',
+              'w-full text-sm px-4 py-3 outline-none transition-all duration-200',
               'disabled:opacity-40 disabled:cursor-not-allowed',
               prefix && 'pl-9',
               suffix && 'pr-10',
@@ -41,23 +41,24 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             )}
             style={{
               background: '#ffffff',
-              border: error ? '1px solid #ba1a1a' : '1px solid #c5c6cf',
+              border: error ? '1px solid #ba1a1a' : '1px solid #E4E4E4',
               borderRadius: 8,
-              color: '#191c1e',
+              color: '#0A0A0A',
+              fontFamily: 'Inter, sans-serif',
               ...style,
             }}
             onFocus={e => { e.currentTarget.style.borderColor = '#031635'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(3,22,53,0.08)' }}
-            onBlur={e => { e.currentTarget.style.borderColor = error ? '#ba1a1a' : '#c5c6cf'; e.currentTarget.style.boxShadow = 'none' }}
+            onBlur={e => { e.currentTarget.style.borderColor = error ? '#ba1a1a' : '#E4E4E4'; e.currentTarget.style.boxShadow = 'none' }}
             {...props}
           />
           {suffix && (
-            <span className="absolute right-3 text-sm select-none pointer-events-none" style={{ color: '#75777f' }}>
+            <span className="absolute right-3 text-sm select-none pointer-events-none" style={{ color: '#858585' }}>
               {suffix}
             </span>
           )}
         </div>
-        {error && <p className="text-[0.72rem] flex items-center gap-1" style={{ color: '#ba1a1a' }}>⚠ {error}</p>}
-        {hint && !error && <p className="text-[0.72rem]" style={{ color: '#75777f' }}>{hint}</p>}
+        {error && <p className="flex items-center gap-1" style={{ fontSize: '0.75rem', color: '#ba1a1a' }}>⚠ {error}</p>}
+        {hint && !error && <p style={{ fontSize: '0.75rem', color: '#858585' }}>{hint}</p>}
       </div>
     )
   }
@@ -78,8 +79,8 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
         {label && (
           <label
             htmlFor={inputId}
-            className="text-[0.68rem] font-semibold tracking-[0.2em] uppercase"
-            style={{ color: '#44474e' }}
+            className="tracking-[0.08em] uppercase"
+            style={{ fontSize: '0.75rem', fontWeight: 600, color: '#858585' }}
           >
             {label}
           </label>
@@ -89,23 +90,23 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
           id={inputId}
           rows={4}
           className={cn(
-            'w-full font-body text-sm px-4 py-3 outline-none transition-all duration-200 resize-none',
-            error ? '' : '',
+            'w-full text-sm px-4 py-3 outline-none transition-all duration-200 resize-none',
             className
           )}
           style={{
             background: '#ffffff',
-            border: error ? '1px solid #ba1a1a' : '1px solid #c5c6cf',
+            border: error ? '1px solid #ba1a1a' : '1px solid #E4E4E4',
             borderRadius: 8,
-            color: '#191c1e',
+            color: '#0A0A0A',
+            fontFamily: 'Inter, sans-serif',
             ...style,
           }}
           onFocus={e => { e.currentTarget.style.borderColor = '#031635'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(3,22,53,0.08)' }}
-          onBlur={e => { e.currentTarget.style.borderColor = error ? '#ba1a1a' : '#c5c6cf'; e.currentTarget.style.boxShadow = 'none' }}
+          onBlur={e => { e.currentTarget.style.borderColor = error ? '#ba1a1a' : '#E4E4E4'; e.currentTarget.style.boxShadow = 'none' }}
           {...props}
         />
-        {error && <p className="text-[0.72rem]" style={{ color: '#ba1a1a' }}>⚠ {error}</p>}
-        {hint && !error && <p className="text-[0.72rem]" style={{ color: '#75777f' }}>{hint}</p>}
+        {error && <p style={{ fontSize: '0.75rem', color: '#ba1a1a' }}>⚠ {error}</p>}
+        {hint && !error && <p style={{ fontSize: '0.75rem', color: '#858585' }}>{hint}</p>}
       </div>
     )
   }

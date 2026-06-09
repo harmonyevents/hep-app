@@ -72,7 +72,7 @@ function RequireAuth({ children, role }: { children: ReactNode; role?: string })
 
 function AppLayout({ children, showFooter = true }: { children: ReactNode; showFooter?: boolean }) {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col" style={{ background: '#F5F5F5' }}>
       <Navbar />
       <main className="flex-1">{children}</main>
       {showFooter && <Footer />}

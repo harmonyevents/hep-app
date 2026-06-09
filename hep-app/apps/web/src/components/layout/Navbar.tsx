@@ -3,9 +3,17 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useAuthStore } from '@/store/auth'
 import { useTranslation } from 'react-i18next'
-import { Bell, LogOut, Menu, X, ChevronDown } from 'lucide-react'
+import { Bell, LogOut, Menu, X, ChevronDown, ArrowRight } from 'lucide-react'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import { cn } from '@/lib/utils'
+
+const PUBLIC_LINKS = [
+  { to: '/',         en: 'Home',         ta: 'முகப்பு' },
+  { to: '/vendor/events', en: 'Vendors',  ta: 'சேவையாளர்கள்' },
+  { to: '#how',      en: 'How it works', ta: 'எப்படி' },
+  { to: '#pricing',  en: 'Pricing',      ta: 'விலை' },
+  { to: '#help',     en: 'Help',         ta: 'உதவி' },
+]
 
 const VENDOR_LINKS = [
   { to: '/vendor/events',    en: 'Browse Events', ta: 'நிகழ்வுகள்' },
@@ -28,25 +36,29 @@ export function Navbar() {
   const isTa = i18n.language === 'ta'
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24)
+    const onScroll = () => setScrolled(window.scrollY > 80)
     window.addEventListener('scroll', onScroll)
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
   useEffect(() => setMenuOpen(false), [location.pathname])
 
   const toggleLang = () => i18n.changeLanguage(isTa ? 'en' : 'ta')
-  const navLinks = user?.role === 'vendor' ? VENDOR_LINKS : CONSUMER_LINKS
+  const navLinks = user?.role === 'vendor' ? VENDOR_LINKS : user?.role === 'consumer' ? CONSUMER_LINKS : PUBLIC_LINKS
 
-  const roleColor = user
-    ? { vendor: 'border-[#c5c6cf]', admin: 'border-[#c5c6cf]', consumer: 'border-[#c5c6cf]' }[user.role]
-    : ''
   const roleLabel = user
     ? { vendor: isTa ? 'சேவையாளர்' : 'Vendor', admin: 'Admin', consumer: isTa ? 'நடத்துனர்' : 'Host' }[user.role]
     : ''
 
+  // Initials for avatar
+  const initials = user?.name
+    ? user.name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2)
+    : 'HE'
+
   return (
     <nav
-      style={scrolled ? { background: '#ffffff', borderBottom: '1px solid #E2E8F0', boxShadow: '0 1px 8px rgba(3,22,53,0.06)' } : { background: 'transparent' }}
+      style={scrolled
+        ? { background: 'rgba(255,255,255,0.92)', borderBottom: '1px solid #E4E4E4', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)' }
+        : { background: 'transparent' }}
       className={cn(
         'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
         scrolled ? 'py-3' : 'py-5'
@@ -54,78 +66,87 @@ export function Navbar() {
     >
       <div className="max-w-7xl mx-auto px-5 sm:px-8 flex items-center justify-between gap-4">
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-3 no-underline group flex-shrink-0">
-          <div className="w-8 h-8 overflow-hidden flex-shrink-0">
-            <img src="/logo_cropped.jpg" alt="HE&P" className="w-8 h-8 object-contain" style={{ mixBlendMode: 'screen' }} />
-          </div>
-          <div className="flex flex-col leading-none">
-            <span className="font-bold text-[0.78rem] tracking-[0.24em] uppercase transition-colors duration-200" style={{ color: scrolled ? '#031635' : '#ffffff' }}>HE&amp;P</span>
-            <span className="text-[0.5rem] tracking-[0.16em] font-light mt-0.5 hidden sm:block" style={{ color: scrolled ? '#44474e' : 'rgba(255,255,255,0.5)' }}>Harmony Events &amp; Productions</span>
-          </div>
+        <Link to="/" className="flex items-center gap-2.5 no-underline group flex-shrink-0">
+          <svg viewBox="0 0 256 256" width="28" height="28" style={{ color: scrolled ? '#031635' : '#ffffff', flexShrink: 0 }} fill="currentColor">
+            <path d="M 128.005 191.173 C 128.448 156.208 156.93 128 192 128 L 192 64 L 128 64 C 128 99.346 99.346 128 64 128 L 64 192 L 128 192 Z M 192 256 L 64 256 C 28.654 256 0 227.346 0 192 L 0 64 L 64 64 L 64 0 L 192 0 C 227.346 0 256 28.654 256 64 L 256 192 L 192 192 Z" />
+          </svg>
+          <span
+            className="font-semibold text-sm transition-colors duration-200"
+            style={{ color: scrolled ? '#031635' : '#ffffff', letterSpacing: '0.02em' }}
+          >HE&amp;P</span>
         </Link>
 
-        {/* Desktop nav links (authenticated) */}
-        {user && (
-          <div className="hidden md:flex items-center gap-6 flex-1 justify-center">
-            {navLinks.map((link) => {
-              const active = location.pathname.startsWith(link.to)
-              return (
-                <Link
-                  key={link.to}
-                  to={link.to}
-                  className="relative text-[0.68rem] tracking-[0.12em] uppercase font-medium transition-colors duration-200 no-underline py-1"
-                  style={{ color: active ? '#031635' : '#44474e' }}
-                >
-                  {isTa ? link.ta : link.en}
-                  {active && (
-                    <motion.span
-                      layoutId="nav-indicator"
-                      className="absolute -bottom-0.5 left-0 right-0 h-px"
-                      style={{ background: '#D4AF37' }}
-                    />
-                  )}
-                </Link>
-              )
-            })}
-          </div>
-        )}
+        {/* Desktop nav links */}
+        <div className="hidden md:flex items-center gap-6 flex-1 justify-center">
+          {navLinks.map((link) => {
+            const active = link.to.startsWith('/') && location.pathname.startsWith(link.to) && link.to !== '/'
+              || (link.to === '/' && location.pathname === '/')
+            return (
+              <Link
+                key={link.to}
+                to={link.to}
+                className="relative text-sm font-medium transition-colors duration-200 no-underline py-1"
+                style={{
+                  color: active
+                    ? (scrolled ? '#D4AF37' : '#D4AF37')
+                    : (scrolled ? '#858585' : 'rgba(255,255,255,0.70)'),
+                }}
+                onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.color = scrolled ? '#0A0A0A' : '#ffffff' }}
+                onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.color = active ? '#D4AF37' : (scrolled ? '#858585' : 'rgba(255,255,255,0.70)') }}
+              >
+                {isTa ? link.ta : link.en}
+                {active && (
+                  <motion.span
+                    layoutId="nav-indicator"
+                    className="absolute -bottom-0.5 left-0 right-0 h-0.5"
+                    style={{ background: '#D4AF37', borderRadius: 9999 }}
+                  />
+                )}
+              </Link>
+            )
+          })}
+        </div>
 
         {/* Right actions */}
         <div className="hidden md:flex items-center gap-3 flex-shrink-0">
           <button
             onClick={toggleLang}
-            style={{ color: scrolled ? '#44474e' : 'rgba(255,255,255,0.5)', borderColor: scrolled ? '#c5c6cf' : 'rgba(255,255,255,0.2)', borderRadius: 8 }}
-            className="text-[0.62rem] font-mono-hep tracking-widest uppercase transition-colors border px-2.5 py-1.5"
+            style={{ color: scrolled ? '#858585' : 'rgba(255,255,255,0.65)', fontSize: '0.875rem' }}
+            className="font-medium transition-colors px-2 py-1"
           >
             {isTa ? 'EN' : 'தமிழ்'}
           </button>
 
           {user ? (
             <div className="flex items-center gap-3">
-              <Link to="/notifications" className="relative no-underline transition-colors w-8 h-8 flex items-center justify-center" style={{ color: scrolled ? '#44474e' : 'rgba(255,255,255,0.5)' }}>
+              <Link to="/notifications" className="relative no-underline transition-colors w-8 h-8 flex items-center justify-center" style={{ color: scrolled ? '#858585' : 'rgba(255,255,255,0.65)' }}>
                 <Bell size={16} strokeWidth={1.5} />
-                <span className="absolute top-0 right-0 w-3.5 h-3.5 rounded-full text-[0.42rem] font-bold text-white flex items-center justify-center" style={{ background: '#1a2b4b' }}>2</span>
+                <span className="absolute top-0 right-0 w-3.5 h-3.5 rounded-full text-[0.6rem] font-bold text-white flex items-center justify-center" style={{ background: '#D4AF37', color: '#031635' }}>2</span>
               </Link>
 
               <DropdownMenu.Root>
                 <DropdownMenu.Trigger asChild>
-                  <button style={{ color: scrolled ? '#031635' : '#ffffff', borderRadius: 8 }} className={cn('flex items-center gap-1.5 text-[0.62rem] font-semibold tracking-[0.14em] uppercase border px-3 py-1.5 outline-none transition-colors', roleColor)}>
+                  <button
+                    style={{ background: '#1a2b4b', color: '#ffffff', borderRadius: 9999 }}
+                    className="flex items-center gap-2 text-sm font-medium px-3 py-1.5 outline-none transition-colors"
+                  >
+                    <span className="w-5 h-5 rounded-full flex items-center justify-center text-[0.65rem] font-bold" style={{ background: '#D4AF37', color: '#031635' }}>{initials}</span>
                     {roleLabel}
-                    <ChevronDown size={10} />
+                    <ChevronDown size={12} />
                   </button>
                 </DropdownMenu.Trigger>
                 <DropdownMenu.Portal>
-                  <DropdownMenu.Content align="end" sideOffset={8} style={{ background: '#ffffff', border: '1px solid #E2E8F0', borderRadius: 8, boxShadow: '0px 10px 30px rgba(26,43,75,0.08)' }} className="z-50 min-w-[180px] py-1 animate-in fade-in-0 slide-in-from-top-2">
-                    <div className="px-3 py-2" style={{ borderBottom: '1px solid #E2E8F0' }}>
-                      <p className="text-[0.7rem] font-medium" style={{ color: '#031635' }}>{user.name || 'User'}</p>
-                      <p className="text-[0.62rem]" style={{ color: '#44474e' }}>{user.phone}</p>
+                  <DropdownMenu.Content align="end" sideOffset={8} style={{ background: '#ffffff', border: '1px solid #E4E4E4', borderRadius: 12, boxShadow: '0px 10px 30px rgba(26,43,75,0.12)' }} className="z-50 min-w-[180px] py-1 animate-in fade-in-0 slide-in-from-top-2">
+                    <div className="px-3 py-2" style={{ borderBottom: '1px solid #E4E4E4' }}>
+                      <p className="text-sm font-medium" style={{ color: '#031635' }}>{user.name || 'User'}</p>
+                      <p className="text-xs" style={{ color: '#858585' }}>{user.phone}</p>
                     </div>
                     <DropdownMenu.Item
                       onSelect={() => { logout(); navigate('/') }}
-                      className="flex items-center gap-2 px-3 py-2 text-[0.68rem] cursor-pointer outline-none transition-colors"
-                      style={{ color: '#44474e' }}
+                      className="flex items-center gap-2 px-3 py-2 text-sm cursor-pointer outline-none transition-colors"
+                      style={{ color: '#858585' }}
                     >
-                      <LogOut size={12} />
+                      <LogOut size={13} />
                       {isTa ? 'வெளியேறு' : 'Sign out'}
                     </DropdownMenu.Item>
                   </DropdownMenu.Content>
@@ -135,16 +156,24 @@ export function Navbar() {
           ) : (
             <Link
               to="/login"
-              style={{ background: '#1a2b4b', color: '#ffffff', borderRadius: 8 }}
-              className="text-[0.68rem] font-semibold tracking-[0.14em] uppercase px-5 py-2.5 transition-all duration-200 hover:-translate-y-px no-underline"
+              style={scrolled
+                ? { background: '#0A0A0A', color: '#ffffff', borderRadius: 9999 }
+                : { background: '#ffffff', color: '#031635', borderRadius: 9999 }}
+              className="flex items-center gap-2 text-sm font-medium px-6 py-2.5 transition-all duration-200 hover:-translate-y-px no-underline"
             >
               {isTa ? 'தொடங்குங்கள்' : 'Get Started'}
+              <ArrowRight size={14} />
             </Link>
           )}
         </div>
 
         {/* Mobile hamburger */}
-        <button className="md:hidden p-2 transition-colors" style={{ color: scrolled ? '#44474e' : 'rgba(255,255,255,0.7)' }} onClick={() => setMenuOpen((v) => !v)} aria-label="Toggle menu">
+        <button
+          className="md:hidden p-2 transition-colors"
+          style={{ color: scrolled ? '#0A0A0A' : 'rgba(255,255,255,0.85)' }}
+          onClick={() => setMenuOpen((v) => !v)}
+          aria-label="Toggle menu"
+        >
           {menuOpen ? <X size={20} /> : <Menu size={20} />}
         </button>
       </div>
@@ -157,27 +186,32 @@ export function Navbar() {
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.2 }}
-            style={{ background: '#ffffff', borderTop: '1px solid #E2E8F0' }}
+            style={{ background: '#ffffff', borderTop: '1px solid #E4E4E4' }}
             className="md:hidden overflow-hidden"
           >
             <div className="px-6 py-5 flex flex-col gap-4">
-              {user && navLinks.map((link) => (
-                <Link key={link.to} to={link.to}
-                  className={cn('text-sm no-underline transition-colors', location.pathname.startsWith(link.to) ? 'text-white' : 'text-white/50 hover:text-white')}
+              {navLinks.map((link) => (
+                <Link
+                  key={link.to}
+                  to={link.to}
+                  className="text-sm font-medium no-underline transition-colors"
+                  style={{ color: location.pathname.startsWith(link.to) ? '#D4AF37' : '#858585' }}
                 >
                   {isTa ? link.ta : link.en}
                 </Link>
               ))}
-              <div className="border-t border-white/8 pt-4 flex items-center justify-between">
-                <button onClick={toggleLang} className="text-xs text-white/40 hover:text-white/70">
+              <div className="border-t pt-4 flex items-center justify-between" style={{ borderColor: '#E4E4E4' }}>
+                <button onClick={toggleLang} className="text-sm" style={{ color: '#858585' }}>
                   {isTa ? 'Switch to English' : 'தமிழிற்கு மாற'}
                 </button>
                 {user ? (
-                  <button onClick={() => { logout(); navigate('/') }} className="text-xs text-white/40 hover:text-white/70 flex items-center gap-1">
-                    <LogOut size={12} /> {isTa ? 'வெளியேறு' : 'Sign out'}
+                  <button onClick={() => { logout(); navigate('/') }} className="text-sm flex items-center gap-1" style={{ color: '#858585' }}>
+                    <LogOut size={13} /> {isTa ? 'வெளியேறு' : 'Sign out'}
                   </button>
                 ) : (
-                  <Link to="/login" className="text-xs text-vivid no-underline">{isTa ? 'தொடங்குங்கள்' : 'Get Started'} →</Link>
+                  <Link to="/login" className="text-sm font-medium no-underline" style={{ color: '#031635' }}>
+                    {isTa ? 'தொடங்குங்கள்' : 'Get Started'} →
+                  </Link>
                 )}
               </div>
             </div>
