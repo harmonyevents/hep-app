@@ -9,27 +9,21 @@ const buttonVariants = cva(
     'font-body font-semibold uppercase tracking-widest',
     'transition-all duration-200 cursor-pointer outline-none select-none overflow-hidden',
     'disabled:opacity-40 disabled:cursor-not-allowed disabled:transform-none',
-    'focus-visible:ring-2 focus-visible:ring-vivid focus-visible:ring-offset-2 focus-visible:ring-offset-deep',
   ],
   {
     variants: {
       variant: {
         primary: [
-          'text-white bg-gradient-to-r from-vivid to-vlight',
-          'shadow-[0_6px_24px_rgba(34,81,255,0.4)]',
-          'hover:shadow-[0_8px_40px_rgba(34,81,255,0.6)]',
+          'text-white',
         ],
         outline: [
-          'bg-transparent text-white border border-white/25',
-          'hover:border-vivid/70 hover:text-vivid',
-          'hover:shadow-[0_0_24px_rgba(34,81,255,0.2)]',
+          'bg-transparent border',
         ],
-        ghost: 'bg-transparent text-sky hover:text-white hover:bg-white/5',
+        ghost: 'bg-transparent',
         danger: [
-          'bg-error text-white',
-          'hover:bg-red-600 shadow-[0_4px_16px_rgba(239,68,68,0.35)]',
+          'text-white',
         ],
-        link: 'bg-transparent text-vivid underline-offset-4 hover:underline p-0 h-auto',
+        link: 'bg-transparent underline-offset-4 hover:underline p-0 h-auto',
       },
       size: {
         sm: 'px-4 py-2 text-[0.62rem] tracking-[0.18em]',
@@ -56,6 +50,13 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ variant = 'primary', size = 'md', loading, icon, children, className, disabled, ...props }, ref) => {
     const isPrimary = variant === 'primary'
 
+    const primaryStyle = variant === 'primary' ? { background: '#1a2b4b', color: '#ffffff', borderRadius: 8 } : {}
+    const outlineStyle = variant === 'outline' ? { borderColor: '#1a2b4b', color: '#1a2b4b', borderRadius: 8 } : {}
+    const dangerStyle = variant === 'danger' ? { background: '#ba1a1a', color: '#ffffff', borderRadius: 8 } : {}
+    const ghostStyle = variant === 'ghost' ? { color: '#44474e' } : {}
+    const linkStyle = variant === 'link' ? { color: '#1a2b4b' } : {}
+    const combinedStyle = { ...primaryStyle, ...outlineStyle, ...dangerStyle, ...ghostStyle, ...linkStyle }
+
     return (
       <motion.button
         ref={ref}
@@ -63,6 +64,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         whileTap={!disabled && !loading ? { scale: 0.97 } : undefined}
         transition={{ duration: 0.15 }}
         className={cn(buttonVariants({ variant, size }), className)}
+        style={combinedStyle}
         disabled={disabled || loading}
         {...(props as React.ComponentProps<typeof motion.button>)}
       >
