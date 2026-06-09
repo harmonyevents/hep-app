@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 import { Stars } from '@/components/ui/Stars'
 import { SectionLabel } from '@/components/ui/SectionLabel'
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/Tabs'
 import { InvoiceModal } from '@/components/InvoiceModal'
 import { MOCK_BIDS, MOCK_EVENTS, MOCK_VENDORS } from '@/lib/mock-data'
 import { VENDOR_CATEGORIES, calcCommission } from '@/lib/constants'
@@ -69,24 +70,18 @@ export function VendorBidsPage() {
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-0 border border-vivid/15 mb-6 overflow-hidden">
-          {tabs.map(tab => (
-            <button
-              key={tab.key}
-              onClick={() => setActiveTab(tab.key)}
-              className={`flex-1 py-2.5 text-[0.65rem] tracking-[0.12em] uppercase font-semibold flex items-center justify-center gap-1.5 transition-all
-                ${activeTab === tab.key ? 'bg-vivid text-white' : 'text-white/50 hover:text-white hover:bg-white/5'}`}
-            >
-              {isTa ? tab.labelTa : tab.label}
-              {tab.count > 0 && (
-                <span className={`text-[0.55rem] px-1.5 py-0.5 rounded-full font-mono-hep
-                  ${activeTab === tab.key ? 'bg-white/20 text-white' : 'bg-white/10 text-white/50'}`}>
-                  {tab.count}
-                </span>
-              )}
-            </button>
-          ))}
-        </div>
+        <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as TabFilter)} className="mb-6">
+          <TabsList className="w-full">
+            {tabs.map(tab => (
+              <TabsTrigger key={tab.key} value={tab.key} className="flex-1 flex items-center justify-center gap-1.5">
+                {isTa ? tab.labelTa : tab.label}
+                {tab.count > 0 && (
+                  <span className="text-[0.55rem] px-1.5 py-0.5 font-mono-hep bg-white/8 text-white/50">{tab.count}</span>
+                )}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+        </Tabs>
 
         {/* Bid list */}
         <div className="space-y-3">

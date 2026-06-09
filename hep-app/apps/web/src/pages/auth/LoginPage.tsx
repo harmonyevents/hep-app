@@ -7,6 +7,7 @@ import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
+import { StepProgress } from '@/components/ui/Progress'
 import { useAuthStore } from '@/store/auth'
 import type { UserRole } from '@/types'
 
@@ -100,15 +101,18 @@ export function LoginPage() {
           </Link>
         </div>
 
-        {/* Progress bar */}
-        <div className="flex gap-1 mb-8">
-          {steps.map((s, i) => (
-            <div
-              key={s}
-              className={`h-0.5 flex-1 transition-all duration-400 ${i <= stepIdx ? 'bg-vivid' : 'bg-white/10'}`}
-            />
-          ))}
+        {/* Step indicator */}
+        <div className="mb-2 flex items-center justify-between">
+          <span className="text-[0.6rem] tracking-[0.2em] uppercase text-muted-hep">
+            {isTa ? `படி ${stepIdx + 1} / ${steps.length}` : `Step ${stepIdx + 1} of ${steps.length}`}
+          </span>
+          <span className="text-[0.6rem] tracking-[0.2em] uppercase text-muted-hep">
+            {['phone','otp','role','name'].map((s,i) => (
+              <span key={s} className={i <= stepIdx ? 'text-vivid' : ''}>{'●'}</span>
+            ))}
+          </span>
         </div>
+        <StepProgress current={stepIdx} total={steps.length} className="mb-8" />
 
         <AnimatePresence mode="wait">
           {/* STEP: PHONE */}

@@ -2,11 +2,12 @@ import { Link } from 'react-router-dom'
 import { motion, type Variants } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import { useAuthStore } from '@/store/auth'
-import { Card } from '@/components/ui/Card'
+import { Card, CardContent } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
 import { Stars } from '@/components/ui/Stars'
 import { SectionLabel } from '@/components/ui/SectionLabel'
+import { Progress } from '@/components/ui/Progress'
 import { MOCK_VENDORS, MOCK_BIDS } from '@/lib/mock-data'
 import { VENDOR_CATEGORIES } from '@/lib/constants'
 
@@ -77,14 +78,7 @@ export function VendorDashboardPage() {
             <h3 className="font-semibold text-sm">{isTa ? 'நம்பகத்தன்மை மதிப்பெண்' : 'Reliability Score'}</h3>
             <span className="font-mono-hep text-vivid text-lg font-bold">{vendor.reliability_score}%</span>
           </div>
-          <div className="w-full bg-white/5 h-2 overflow-hidden">
-            <motion.div
-              initial={{ width: 0 }}
-              animate={{ width: `${vendor.reliability_score}%` }}
-              transition={{ duration: 1, delay: 0.3, ease: 'easeOut' }}
-              className="h-full bg-gradient-to-r from-vivid to-success"
-            />
-          </div>
+          <Progress value={vendor.reliability_score} label="Reliability Score" className="h-2" />
           <div className="flex justify-between text-[0.65rem] text-muted-hep mt-2">
             <span>{isTa ? 'ஒப்பந்தம் முடிவு விகிதம்' : 'Completion rate'}:  {vendor.reliability_score}%</span>
             <span>{isTa ? 'சராசரி பதில் நேரம்' : 'Avg response'}: {vendor.response_time_hours}h</span>
