@@ -25,22 +25,22 @@ export const useAuthStore = create<AuthState>()(
       setUser: (user) => set({ user }),
       setLoading: (isLoading) => set({ isLoading }),
 
-      sendOtp: async (phone: string) => {
+      sendOtp: async (email: string) => {
         set({ isLoading: true })
-        // Format phone for Supabase (must be E.164)
-        const formatted = phone.startsWith('+') ? phone : `+91${phone.replace(/\s/g, '').replace(/^0/, '')}`
-        const { error } = await supabase.auth.signInWithOtp({ phone: formatted })
+        const { error } = await supabase.auth.signInWithOtp({
+          email: email.trim().toLowerCase(),
+          options: { shouldCreateUser: true },
+        })
         set({ isLoading: false })
         return error ? { error: error.message } : {}
       },
 
-      verifyOtp: async (phone: string, token: string) => {
+      verifyOtp: async (email: string, token: string) => {
         set({ isLoading: true })
-        const formatted = phone.startsWith('+') ? phone : `+91${phone.replace(/\s/g, '').replace(/^0/, '')}`
         const { data, error } = await supabase.auth.verifyOtp({
-          phone: formatted,
+          email: email.trim().toLowerCase(),
           token,
-          type: 'sms',
+          type: 'email',
         })
         if (error) { set({ isLoading: false }); return { error: error.message } }
 
