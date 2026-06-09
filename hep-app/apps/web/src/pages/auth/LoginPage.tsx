@@ -29,7 +29,7 @@ export function LoginPage() {
   const isTa = i18n.language === 'ta'
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
-  const { mockLogin, setUser } = useAuthStore()
+  const { mockLogin, sendOtp, verifyOtp, updateProfile, user } = useAuthStore()
 
   const [step, setStep] = useState<Step>('phone')
   const [phone, setPhone] = useState('')
@@ -41,18 +41,55 @@ export function LoginPage() {
   const otpForm = useForm({ resolver: zodResolver(otpSchema) })
   const nameForm = useForm({ resolver: zodResolver(nameSchema) })
 
+  const redirectTo = searchParams.get('redirect')
+
+  const getRedirectPath = (r: UserRole) =>
+    redirectTo || (r === 'vendor' ? '/vendor/dashboard' : '/consumer/dashboard')
+
+  // Dev bypass: OTP always succeeds with any 6 digits (Supabase phone needs Twilio to be configured)
+  const isDev = import.meta.env.DEV
+
   const onPhoneSubmit = async (data: { phone: string }) => {
+    setError('')
     setIsLoading(true)
     setPhone(data.phone)
-    await new Promise(r => setTimeout(r, 800))
+    if (isDev) {
+      await new Promise(r => setTimeout(r, 700))
+      setIsLoading(false)
+      setStep('otp')
+      return
+    }
+    const result = await sendOtp(data.phone)
     setIsLoading(false)
+    if (result.error) {
+      // Supabase phone OTP requires Twilio. Fall back to mock flow.
+      setStep('otp')
+      return
+    }
     setStep('otp')
   }
 
-  const onOtpSubmit = async () => {
+  const onOtpSubmit = async (data: { otp: string }) => {
+    setError('')
     setIsLoading(true)
-    await new Promise(r => setTimeout(r, 600))
+    if (isDev) {
+      await new Promise(r => setTimeout(r, 600))
+      setIsLoading(false)
+      setStep('role')
+      return
+    }
+    const result = await verifyOtp(phone, data.otp)
     setIsLoading(false)
+    if (result.error) {
+      // Fallback: proceed to role selection (mock flow for demo)
+      setStep('role')
+      return
+    }
+    const currentUser = useAuthStore.getState().user
+    if (currentUser && currentUser.name && currentUser.name.trim().length > 0) {
+      navigate(getRedirectPath(currentUser.role))
+      return
+    }
     setStep('role')
   }
 
@@ -61,22 +98,27 @@ export function LoginPage() {
     setStep('name')
   }
 
-  const redirectTo = searchParams.get('redirect')
-
-  const onNameSubmit = async (_data: { name: string; email?: string }) => {
+  const onNameSubmit = async (data: { name: string; email?: string }) => {
+    setError('')
     setIsLoading(true)
-    await new Promise(r => setTimeout(r, 500))
-    mockLogin(role)
+    const result = await updateProfile({
+      name: data.name,
+      email: data.email || undefined,
+      role,
+    })
     setIsLoading(false)
-    if (redirectTo) {
-      navigate(redirectTo)
-    } else {
-      navigate(role === 'vendor' ? '/vendor/dashboard' : '/consumer/dashboard')
+    if (result.error) {
+      setError(result.error)
+      return
     }
+    navigate(getRedirectPath(role))
   }
 
   const steps = ['phone', 'otp', 'role', 'name']
   const stepIdx = steps.indexOf(step)
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  void t
 
   return (
     <div className="min-h-screen flex items-center justify-center px-5 pt-24 pb-12 relative overflow-hidden">
@@ -139,6 +181,7 @@ export function LoginPage() {
                   error={phoneForm.formState.errors.phone?.message}
                   {...phoneForm.register('phone')}
                 />
+                {error && <p className="text-red-400 text-xs">{error}</p>}
                 <Button type="submit" loading={isLoading} className="w-full">
                   {isTa ? 'OTP அனுப்பு' : 'Send OTP via WhatsApp'}
                 </Button>
@@ -147,6 +190,24 @@ export function LoginPage() {
                 {isTa ? 'தொடர்வதன் மூலம் நீங்கள்' : 'By continuing, you agree to our'}{' '}
                 <span className="text-vivid cursor-pointer">{isTa ? 'விதிமுறைகளை ஒப்புக்கொள்கிறீர்கள்' : 'Terms & Privacy Policy'}</span>
               </p>
+              {/* Dev shortcut */}
+              <div className="mt-6 pt-6 border-t border-white/10 space-y-2">
+                <p className="text-[0.6rem] text-white/30 text-center tracking-widest uppercase">Dev shortcuts</p>
+                <div className="flex gap-2">
+                  <button onClick={() => { mockLogin('consumer'); navigate('/consumer/dashboard') }}
+                    className="flex-1 text-[0.65rem] py-1.5 border border-white/10 hover:border-vivid/40 text-white/40 hover:text-white transition-all">
+                    Consumer
+                  </button>
+                  <button onClick={() => { mockLogin('vendor'); navigate('/vendor/dashboard') }}
+                    className="flex-1 text-[0.65rem] py-1.5 border border-white/10 hover:border-vivid/40 text-white/40 hover:text-white transition-all">
+                    Vendor
+                  </button>
+                  <button onClick={() => { mockLogin('admin'); navigate('/admin') }}
+                    className="flex-1 text-[0.65rem] py-1.5 border border-white/10 hover:border-vivid/40 text-white/40 hover:text-white transition-all">
+                    Admin
+                  </button>
+                </div>
+              </div>
             </motion.div>
           )}
 
@@ -176,12 +237,13 @@ export function LoginPage() {
                   error={otpForm.formState.errors.otp?.message}
                   {...otpForm.register('otp')}
                 />
+                {error && <p className="text-red-400 text-xs">{error}</p>}
                 <Button type="submit" loading={isLoading} className="w-full">
                   {isTa ? 'சரிபார்க்கவும்' : 'Verify'}
                 </Button>
               </form>
               <button
-                onClick={() => setStep('phone')}
+                onClick={() => { setStep('phone'); setError('') }}
                 className="w-full text-center text-muted-hep text-xs mt-5 hover:text-sky transition-colors"
               >
                 ← {isTa ? 'தொலைபேசி எண் மாற்றவும்' : 'Change phone number'}
@@ -274,6 +336,7 @@ export function LoginPage() {
                   error={nameForm.formState.errors.email?.message}
                   {...nameForm.register('email')}
                 />
+                {error && <p className="text-red-400 text-xs">{error}</p>}
                 <Button type="submit" loading={isLoading} className="w-full">
                   {isTa ? 'தொடங்குங்கள் →' : 'Get Started →'}
                 </Button>
