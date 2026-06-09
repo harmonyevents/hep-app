@@ -1,11 +1,10 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import {
   motion,
   AnimatePresence,
   useScroll,
   useTransform,
-  useInView,
   type Variants,
 } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
@@ -355,10 +354,9 @@ function StatsSection({ isTa }: { isTa: boolean }) {
   )
 }
 
-// ── How It Works — 3D cards ───────────────────────────────────────────────────
+// ── How It Works — Flat numbered cards ───────────────────────────────────────
 function HowItWorksSection({ isTa }: { isTa: boolean }) {
   const sectionRef = useRef<HTMLElement>(null)
-  const isInView = useInView(sectionRef, { once: true, margin: '-80px' })
 
   return (
     <section ref={sectionRef} className="py-28 px-6 relative overflow-hidden" style={{ background: BG_CREAM }}>
@@ -379,73 +377,49 @@ function HowItWorksSection({ isTa }: { isTa: boolean }) {
           </motion.div>
         </div>
 
-        {/* 3D cards */}
-        <div style={{ perspective: '1200px', perspectiveOrigin: '50% 30%' }}>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-            {STEPS.map((step, i) => {
-              const initRotY = [20, 10, -10, -20][i]
-              return (
-                <motion.div key={step.n}
-                  initial={{ opacity: 0, rotateY: initRotY, y: 50, scale: 0.92 }}
-                  animate={isInView ? { opacity: 1, rotateY: 0, y: 0, scale: 1 } : {}}
-                  transition={{ duration: 0.85, delay: i * 0.12, ease: [0.25, 0.46, 0.45, 0.94] }}
-                  whileHover={{ rotateY: i < 2 ? -6 : 6, scale: 1.03, z: 30 }}
-                  style={{ transformStyle: 'preserve-3d', cursor: 'default' }}
-                  className="relative group"
-                >
-                  {/* Ghost watermark */}
-                  <div className="absolute -top-2 -right-1 font-display leading-none select-none pointer-events-none"
-                    style={{ fontSize: 'clamp(5rem,9vw,8rem)', color: GOLD_8, transform: 'translateZ(12px)', zIndex: 0 }}
-                  >{step.n}</div>
-
-                  {/* Card */}
-                  <div className="relative overflow-hidden h-full flex flex-col gap-5 p-7 transition-all duration-300"
-                    style={{
-                      background: '#FFFFFF',
-                      border: `1px solid ${BORDER_GOLD}`,
-                      boxShadow: `0 4px 24px rgba(0,0,0,0.06), 0 1px 0 ${GOLD_8} inset`,
-                      transformStyle: 'preserve-3d',
-                    }}
+        {/* Flat numbered step cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+          {STEPS.map((step, i) => (
+            <motion.div key={step.n}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: i * 0.1 }}
+              className="flex"
+            >
+              <div className="flex w-full overflow-hidden"
+                style={{
+                  background: '#ffffff',
+                  border: '1px solid #E2E8F0',
+                  borderRadius: 8,
+                  borderLeft: '3px solid #D4AF37',
+                }}
+              >
+                {/* Left number */}
+                <div className="flex items-start justify-center pt-6 pl-5 pr-3 flex-shrink-0">
+                  <span className="font-bold leading-none select-none"
+                    style={{ fontSize: '2rem', color: '#031635', letterSpacing: '-0.02em' }}
+                  >{step.n}</span>
+                </div>
+                {/* Right content */}
+                <div className="flex flex-col gap-3 p-5 pl-2">
+                  <div className="w-9 h-9 flex items-center justify-center flex-shrink-0"
+                    style={{ background: 'rgba(212,175,55,0.10)', borderRadius: 8 }}
                   >
-                    {/* Blue top accent line */}
-                    <div className="absolute top-0 left-0 right-0 h-0.5 transition-all duration-300"
-                      style={{ background: `linear-gradient(to right, ${BLUE}, ${BLUE_LIGHT})`, opacity: 0.8 }} />
-
-                    {/* Icon + step */}
-                    <div className="flex items-center justify-between relative z-10 pt-1" style={{ transform: 'translateZ(8px)' }}>
-                      <div className="w-11 h-11 flex items-center justify-center transition-all duration-300 group-hover:scale-110"
-                        style={{ border: `1px solid ${GOLD_25}`, background: GOLD_8 }}
-                      >
-                        <Icon name={step.icon} size={19} strokeWidth={1.4} style={{ color: GOLD }} />
-                      </div>
-                      <span className="font-mono-hep text-[0.6rem] tracking-[0.25em]" style={{ color: GOLD_50 }}>{step.n}</span>
-                    </div>
-
-                    {/* Content */}
-                    <div className="relative z-10 flex-1" style={{ transform: 'translateZ(4px)' }}>
-                      <h3 className="font-display text-[1.3rem] font-semibold leading-snug mb-2.5" style={{ color: TXT }}>
-                        {isTa ? step.ta.title : step.en.title}
-                      </h3>
-                      <p className="text-[0.78rem] leading-relaxed" style={{ color: TXT2 }}>
-                        {isTa ? step.ta.desc : step.en.desc}
-                      </p>
-                    </div>
-
-                    {/* Bottom gold accent */}
-                    <div className="h-px" style={{ background: `linear-gradient(to right, ${GOLD_25}, transparent)` }} />
+                    <Icon name={step.icon} size={17} strokeWidth={1.5} style={{ color: '#D4AF37' }} />
                   </div>
-
-                  {/* Arrow */}
-                  {i < 3 && (
-                    <div className="hidden lg:flex absolute top-[52px] -right-3 z-20 items-center">
-                      <div className="w-6 h-px" style={{ background: GOLD_25 }} />
-                      <div className="w-0 h-0" style={{ borderTop: '4px solid transparent', borderBottom: '4px solid transparent', borderLeft: `5px solid ${GOLD_25}` }} />
-                    </div>
-                  )}
-                </motion.div>
-              )
-            })}
-          </div>
+                  <div>
+                    <h3 className="font-semibold text-sm leading-snug mb-1.5" style={{ color: '#031635' }}>
+                      {isTa ? step.ta.title : step.en.title}
+                    </h3>
+                    <p className="text-[0.78rem] leading-relaxed" style={{ color: '#44474e' }}>
+                      {isTa ? step.ta.desc : step.en.desc}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          ))}
         </div>
       </div>
     </section>
