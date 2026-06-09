@@ -22,12 +22,8 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
   body {
-    background-color: #051C2C;
-    /* Subtle atmospheric depth — breaks the flat-dark look */
-    background-image:
-      radial-gradient(ellipse 90% 70% at 8% 30%, rgba(8, 28, 50, 0.85) 0%, transparent 65%),
-      radial-gradient(ellipse 50% 40% at 90% 80%, rgba(34, 81, 255, 0.03) 0%, transparent 60%);
-    color: #EAF0F8;
+    background-color: #FAFAF8;
+    color: #0D1B2A;
     font-family: 'Sora', sans-serif;
     overflow-x: hidden;
     line-height: 1.65;
@@ -47,11 +43,11 @@
     background-size: 280px 280px;
   }
   #root { min-height: 100svh; }
-  ::selection { background: rgba(34,81,255,0.6); color: #fff; }
+  ::selection { background: rgba(34,81,255,0.15); color: #0D1B2A; }
   ::-webkit-scrollbar { width: 3px; }
-  ::-webkit-scrollbar-track { background: #051C2C; }
-  ::-webkit-scrollbar-thumb { background: rgba(34,81,255,0.4); border-radius: 2px; }
-  ::-webkit-scrollbar-thumb:hover { background: rgba(34,81,255,0.7); }
+  ::-webkit-scrollbar-track { background: #F0EBE0; }
+  ::-webkit-scrollbar-thumb { background: rgba(201,169,110,0.5); border-radius: 2px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(201,169,110,0.8); }
 }
 
 @layer utilities {
@@ -59,25 +55,26 @@
   .font-mono-hep { font-family: 'Space Mono', monospace; }
 
   .glass {
-    background: rgba(10,45,77,0.35);
+    background: rgba(255,255,255,0.70);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(0,0,0,0.08);
   }
   .glass-dark {
-    background: rgba(5,28,44,0.92);
+    background: rgba(13,27,42,0.96);
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
   }
   .border-vivid-subtle { border: 1px solid rgba(34,81,255,0.18); }
-  .glow-vivid { box-shadow: 0 0 32px rgba(34,81,255,0.35); }
-  .text-muted-hep { color: rgba(189,215,238,0.55); }
+  .glow-vivid { box-shadow: 0 0 32px rgba(34,81,255,0.25); }
+  .text-muted-hep { color: rgba(74,85,104,0.8); }
   .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
   .scrollbar-hide::-webkit-scrollbar { display: none; }
 
   .grid-bg {
     background-image:
-      linear-gradient(rgba(34,81,255,.05) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(34,81,255,.05) 1px, transparent 1px);
+      linear-gradient(rgba(34,81,255,.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(34,81,255,.06) 1px, transparent 1px);
     background-size: 64px 64px;
   }
 }
