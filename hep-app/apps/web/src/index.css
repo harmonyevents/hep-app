@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Sora:wght@300;400;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Sora:wght@300;400;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Noto+Sans+Tamil:wght@300;400;600;700&display=swap');
 
 @theme {
   --color-deep: #051C2C;
@@ -30,6 +30,9 @@
     font-family: 'Sora', sans-serif;
     overflow-x: hidden;
     line-height: 1.65;
+  }
+  :lang(ta) body, html:lang(ta) body {
+    font-family: 'Noto Sans Tamil', 'Sora', sans-serif;
   }
   /* Grain overlay — adds texture, kills the flat plastic feel */
   body::after {
@@ -168,4 +171,27 @@
     padding: 1px;
     pointer-events: none;
   }
+
+  /* Tamil font support */
+  :lang(ta), .font-tamil { font-family: 'Noto Sans Tamil', 'Sora', sans-serif; }
+
+  /* Radix UI animation helpers */
+  .animate-in { animation-duration: 200ms; animation-fill-mode: both; }
+  .animate-out { animation-duration: 150ms; animation-fill-mode: both; }
+  .fade-in-0 { --tw-enter-opacity: 0; }
+  .fade-out-0 { --tw-exit-opacity: 0; }
+  .zoom-in-95 { --tw-enter-scale: 0.95; }
+  .zoom-out-95 { --tw-exit-scale: 0.95; }
+  .slide-in-from-top-2 { --tw-enter-translate-y: -0.5rem; }
+
+  @keyframes enter {
+    from { opacity: var(--tw-enter-opacity, 1); transform: translate(var(--tw-enter-translate-x, 0), var(--tw-enter-translate-y, 0)) scale(var(--tw-enter-scale, 1)); }
+    to   { opacity: 1; transform: translate(0, 0) scale(1); }
+  }
+  @keyframes exit {
+    from { opacity: 1; transform: translate(0, 0) scale(1); }
+    to   { opacity: var(--tw-exit-opacity, 0); transform: translate(var(--tw-exit-translate-x, 0), var(--tw-exit-translate-y, 0)) scale(var(--tw-exit-scale, 1)); }
+  }
+  .animate-in { animation-name: enter; }
+  .animate-out { animation-name: exit; }
 }

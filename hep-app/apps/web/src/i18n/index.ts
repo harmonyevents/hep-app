@@ -12,6 +12,13 @@ i18n
     interpolation: { escapeValue: false },
   })
 
-i18n.on('languageChanged', (lng) => localStorage.setItem('hep-lang', lng))
+i18n.on('languageChanged', (lng) => {
+  localStorage.setItem('hep-lang', lng)
+  // Update html lang attribute for proper font rendering (Tamil vs Latin)
+  document.documentElement.lang = lng === 'ta' ? 'ta' : 'en'
+})
+
+// Set initial lang attribute
+document.documentElement.lang = (localStorage.getItem('hep-lang') || 'en') === 'ta' ? 'ta' : 'en'
 
 export default i18n

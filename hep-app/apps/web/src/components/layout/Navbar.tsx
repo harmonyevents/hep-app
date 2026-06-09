@@ -3,7 +3,20 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useAuthStore } from '@/store/auth'
 import { useTranslation } from 'react-i18next'
-import { Icon } from '@/components/ui/Icon'
+import { Bell, LogOut, Menu, X, ChevronDown } from 'lucide-react'
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
+import { cn } from '@/lib/utils'
+
+const VENDOR_LINKS = [
+  { to: '/vendor/events',    en: 'Browse Events', ta: 'நிகழ்வுகள்' },
+  { to: '/vendor/bids',      en: 'My Bids',       ta: 'என் ஏலங்கள்' },
+  { to: '/vendor/dashboard', en: 'Dashboard',     ta: 'டாஷ்போர்டு' },
+]
+const CONSUMER_LINKS = [
+  { to: '/consumer/post',      en: 'Post Event',  ta: 'நிகழ்வு பதிவிடு' },
+  { to: '/consumer/events',    en: 'My Events',   ta: 'என் நிகழ்வுகள்' },
+  { to: '/consumer/dashboard', en: 'Dashboard',   ta: 'டாஷ்போர்டு' },
+]
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false)
@@ -12,120 +25,128 @@ export function Navbar() {
   const { i18n } = useTranslation()
   const location = useLocation()
   const navigate = useNavigate()
+  const isTa = i18n.language === 'ta'
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24)
     window.addEventListener('scroll', onScroll)
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
+  useEffect(() => setMenuOpen(false), [location.pathname])
 
-  useEffect(() => { setMenuOpen(false) }, [location.pathname])
+  const toggleLang = () => i18n.changeLanguage(isTa ? 'en' : 'ta')
+  const navLinks = user?.role === 'vendor' ? VENDOR_LINKS : CONSUMER_LINKS
 
-  const toggleLang = () => i18n.changeLanguage(i18n.language === 'en' ? 'ta' : 'en')
-
-  const navLinks = user
-    ? user.role === 'vendor'
-      ? [
-          { to: '/vendor/events', label: 'Browse Events', labelTa: 'நிகழ்வுகளை உலாவுக' },
-          { to: '/vendor/bids', label: 'My Bids', labelTa: 'என் ஏலங்கள்' },
-          { to: '/vendor/dashboard', label: 'Dashboard', labelTa: 'டாஷ்போர்டு' },
-        ]
-      : [
-          { to: '/consumer/post', label: 'Post Event', labelTa: 'நிகழ்வை பதிவிடுக' },
-          { to: '/consumer/events', label: 'My Events', labelTa: 'என் நிகழ்வுகள்' },
-          { to: '/consumer/dashboard', label: 'Dashboard', labelTa: 'டாஷ்போர்டு' },
-        ]
-    : []
+  const roleColor = user
+    ? { vendor: 'text-vivid border-vivid/40', admin: 'text-warn border-warn/40', consumer: 'text-success border-success/40' }[user.role]
+    : ''
+  const roleLabel = user
+    ? { vendor: isTa ? 'சேவையாளர்' : 'Vendor', admin: 'Admin', consumer: isTa ? 'நடத்துனர்' : 'Host' }[user.role]
+    : ''
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'glass-dark border-b border-white/8 py-3' : 'py-5'}`}>
-      <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
-
+    <nav
+      className={cn(
+        'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
+        scrolled ? 'py-3 glass-dark border-b border-white/6 shadow-[0_4px_24px_rgba(0,0,0,0.4)]' : 'py-5'
+      )}
+    >
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 flex items-center justify-between gap-4">
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-3 no-underline group">
-          <div className="w-9 h-9 flex items-center justify-center overflow-hidden flex-shrink-0">
-            <img
-              src="/logo_cropped.jpg"
-              alt="HE&P"
-              className="w-9 h-9 object-contain"
-              style={{ mixBlendMode: 'screen' }}
-            />
+        <Link to="/" className="flex items-center gap-3 no-underline group flex-shrink-0">
+          <div className="w-8 h-8 overflow-hidden flex-shrink-0">
+            <img src="/logo_cropped.jpg" alt="HE&P" className="w-8 h-8 object-contain" style={{ mixBlendMode: 'screen' }} />
           </div>
           <div className="flex flex-col leading-none">
-            <span className="font-bold text-[0.8rem] tracking-[0.24em] uppercase text-white group-hover:text-vivid transition-colors duration-200">HE&P</span>
-            <span className="text-[0.52rem] tracking-[0.18em] text-white/30 font-light mt-0.5 hidden sm:block">Harmony Events & Productions</span>
+            <span className="font-bold text-[0.78rem] tracking-[0.24em] uppercase text-white group-hover:text-vivid transition-colors duration-200">HE&amp;P</span>
+            <span className="text-[0.5rem] tracking-[0.16em] text-white/25 font-light mt-0.5 hidden sm:block">Harmony Events &amp; Productions</span>
           </div>
         </Link>
 
-        {/* Desktop nav */}
-        <div className="hidden md:flex items-center gap-8">
-          {navLinks.map(link => (
-            <Link
-              key={link.to}
-              to={link.to}
-              className={`text-[0.7rem] tracking-[0.12em] uppercase font-medium transition-colors duration-200 no-underline
-                ${location.pathname.startsWith(link.to) ? 'text-white' : 'text-white/45 hover:text-white/80'}`}
-            >
-              {i18n.language === 'ta' ? link.labelTa : link.label}
-            </Link>
-          ))}
+        {/* Desktop nav links (authenticated) */}
+        {user && (
+          <div className="hidden md:flex items-center gap-6 flex-1 justify-center">
+            {navLinks.map((link) => {
+              const active = location.pathname.startsWith(link.to)
+              return (
+                <Link
+                  key={link.to}
+                  to={link.to}
+                  className={cn(
+                    'relative text-[0.68rem] tracking-[0.12em] uppercase font-medium transition-colors duration-200 no-underline py-1',
+                    active ? 'text-white' : 'text-white/40 hover:text-white/75'
+                  )}
+                >
+                  {isTa ? link.ta : link.en}
+                  {active && (
+                    <motion.span
+                      layoutId="nav-indicator"
+                      className="absolute -bottom-0.5 left-0 right-0 h-px bg-vivid"
+                    />
+                  )}
+                </Link>
+              )
+            })}
+          </div>
+        )}
 
-          {/* Language toggle */}
+        {/* Right actions */}
+        <div className="hidden md:flex items-center gap-3 flex-shrink-0">
           <button
             onClick={toggleLang}
-            className="text-[0.65rem] font-mono-hep tracking-widest uppercase text-white/30 hover:text-white/70 transition-colors border border-white/10 px-2.5 py-1 hover:border-white/25"
+            className="text-[0.62rem] font-mono-hep tracking-widest uppercase text-white/30 hover:text-white/65 transition-colors border border-white/10 hover:border-white/20 px-2.5 py-1.5"
           >
-            {i18n.language === 'en' ? 'தமிழ்' : 'EN'}
+            {isTa ? 'EN' : 'தமிழ்'}
           </button>
 
           {user ? (
-            <div className="flex items-center gap-4">
-              {/* Notification bell */}
-              <Link to="/notifications" className="relative no-underline text-white/35 hover:text-white/70 transition-colors" title="Notifications">
-                <Icon name="bell" size={17} strokeWidth={1.5} />
-                <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-vivid rounded-full text-[0.42rem] font-bold text-white flex items-center justify-center">2</span>
+            <div className="flex items-center gap-3">
+              <Link to="/notifications" className="relative no-underline text-white/35 hover:text-white/70 transition-colors w-8 h-8 flex items-center justify-center">
+                <Bell size={16} strokeWidth={1.5} />
+                <span className="absolute top-0 right-0 w-3.5 h-3.5 bg-vivid rounded-full text-[0.42rem] font-bold text-white flex items-center justify-center">2</span>
               </Link>
 
-              {/* Role pill */}
-              <span className={`text-[0.6rem] font-semibold tracking-[0.15em] uppercase px-2.5 py-1 border
-                ${user.role === 'vendor'
-                  ? 'border-vivid/40 text-vivid'
-                  : user.role === 'admin'
-                  ? 'border-warn/40 text-warn'
-                  : 'border-success/40 text-success'}`}>
-                {user.role === 'admin' ? 'Admin' : user.role === 'vendor' ? 'Vendor' : 'Host'}
-              </span>
-
-              <button
-                onClick={() => { logout(); navigate('/') }}
-                className="text-[0.65rem] tracking-widest uppercase text-white/30 hover:text-white/60 transition-colors"
-              >
-                {i18n.language === 'ta' ? 'வெளியேறு' : 'Sign out'}
-              </button>
+              <DropdownMenu.Root>
+                <DropdownMenu.Trigger asChild>
+                  <button className={cn('flex items-center gap-1.5 text-[0.62rem] font-semibold tracking-[0.14em] uppercase border px-3 py-1.5 outline-none transition-colors hover:bg-white/5', roleColor)}>
+                    {roleLabel}
+                    <ChevronDown size={10} />
+                  </button>
+                </DropdownMenu.Trigger>
+                <DropdownMenu.Portal>
+                  <DropdownMenu.Content align="end" sideOffset={8} className="z-50 min-w-[180px] glass-dark border border-white/10 py-1 animate-in fade-in-0 slide-in-from-top-2">
+                    <div className="px-3 py-2 border-b border-white/8">
+                      <p className="text-[0.7rem] text-white font-medium">{user.name || 'User'}</p>
+                      <p className="text-[0.62rem] text-muted-hep">{user.phone}</p>
+                    </div>
+                    <DropdownMenu.Item
+                      onSelect={() => { logout(); navigate('/') }}
+                      className="flex items-center gap-2 px-3 py-2 text-[0.68rem] text-white/60 hover:text-white hover:bg-white/5 cursor-pointer outline-none transition-colors"
+                    >
+                      <LogOut size={12} />
+                      {isTa ? 'வெளியேறு' : 'Sign out'}
+                    </DropdownMenu.Item>
+                  </DropdownMenu.Content>
+                </DropdownMenu.Portal>
+              </DropdownMenu.Root>
             </div>
           ) : (
             <Link
               to="/login"
-              className="text-[0.7rem] font-semibold tracking-[0.14em] uppercase px-5 py-2.5 bg-vivid text-white hover:bg-vlight transition-all duration-200 hover:-translate-y-px shadow-[0_4px_20px_rgba(34,81,255,0.3)] no-underline"
+              className="text-[0.68rem] font-semibold tracking-[0.14em] uppercase px-5 py-2.5 bg-gradient-to-r from-vivid to-vlight text-white hover:shadow-[0_0_24px_rgba(34,81,255,0.5)] transition-all duration-200 hover:-translate-y-px no-underline shadow-[0_4px_16px_rgba(34,81,255,0.3)]"
             >
-              {i18n.language === 'ta' ? 'தொடங்குங்கள்' : 'Get Started'}
+              {isTa ? 'தொடங்குங்கள்' : 'Get Started'}
             </Link>
           )}
         </div>
 
         {/* Mobile hamburger */}
-        <button
-          className="md:hidden flex flex-col gap-1.5 cursor-pointer p-1"
-          onClick={() => setMenuOpen(v => !v)}
-          aria-label="Toggle menu"
-        >
-          <motion.span animate={{ rotate: menuOpen ? 45 : 0, y: menuOpen ? 7 : 0 }} className="block w-5 h-px bg-white" />
-          <motion.span animate={{ opacity: menuOpen ? 0 : 1 }} className="block w-5 h-px bg-white" />
-          <motion.span animate={{ rotate: menuOpen ? -45 : 0, y: menuOpen ? -7 : 0 }} className="block w-5 h-px bg-white" />
+        <button className="md:hidden p-2 text-white/60 hover:text-white transition-colors" onClick={() => setMenuOpen((v) => !v)} aria-label="Toggle menu">
+          {menuOpen ? <X size={20} /> : <Menu size={20} />}
         </button>
       </div>
 
-      {/* Mobile menu */}
+      {/* Mobile drawer */}
       <AnimatePresence>
         {menuOpen && (
           <motion.div
@@ -136,24 +157,23 @@ export function Navbar() {
             className="md:hidden glass-dark border-t border-white/8 overflow-hidden"
           >
             <div className="px-6 py-5 flex flex-col gap-4">
-              {navLinks.map(link => (
+              {user && navLinks.map((link) => (
                 <Link key={link.to} to={link.to}
-                  className={`text-sm transition-colors no-underline
-                    ${location.pathname.startsWith(link.to) ? 'text-white' : 'text-white/50 hover:text-white'}`}
+                  className={cn('text-sm no-underline transition-colors', location.pathname.startsWith(link.to) ? 'text-white' : 'text-white/50 hover:text-white')}
                 >
-                  {i18n.language === 'ta' ? link.labelTa : link.label}
+                  {isTa ? link.ta : link.en}
                 </Link>
               ))}
               <div className="border-t border-white/8 pt-4 flex items-center justify-between">
                 <button onClick={toggleLang} className="text-xs text-white/40 hover:text-white/70">
-                  {i18n.language === 'en' ? 'Switch to தமிழ்' : 'Switch to English'}
+                  {isTa ? 'Switch to English' : 'தமிழிற்கு மாற'}
                 </button>
                 {user ? (
-                  <button onClick={() => { logout(); navigate('/') }} className="text-xs text-white/40 hover:text-white/70">
-                    Sign out
+                  <button onClick={() => { logout(); navigate('/') }} className="text-xs text-white/40 hover:text-white/70 flex items-center gap-1">
+                    <LogOut size={12} /> {isTa ? 'வெளியேறு' : 'Sign out'}
                   </button>
                 ) : (
-                  <Link to="/login" className="text-xs text-vivid no-underline">Get Started →</Link>
+                  <Link to="/login" className="text-xs text-vivid no-underline">{isTa ? 'தொடங்குங்கள்' : 'Get Started'} →</Link>
                 )}
               </div>
             </div>
