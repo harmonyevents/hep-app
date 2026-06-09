@@ -1,40 +1,36 @@
-import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/lib/utils'
 
-const badgeVariants = cva(
-  'inline-flex items-center gap-1.5 font-mono-hep font-semibold tracking-widest uppercase',
-  {
-    variants: {
-      variant: {
-        default:  'bg-vivid/15 text-vlight border border-vivid/30',
-        vivid:    'bg-vivid/15 text-vlight border border-vivid/30',
-        success:  'bg-success/15 text-success border border-success/30',
-        warning:  'bg-warn/15 text-warn border border-warn/30',
-        warn:     'bg-warn/15 text-warn border border-warn/30',
-        error:    'bg-error/15 text-error border border-error/30',
-        sky:      'bg-sky/10 text-sky border border-sky/20',
-        ghost:    'bg-white/5 text-white/60 border border-white/10',
-        outline:  'bg-transparent text-white/60 border border-white/20',
-      },
-      size: {
-        sm: 'px-2 py-0.5 text-[0.55rem]',
-        md: 'px-2.5 py-0.5 text-[0.6rem]',
-        lg: 'px-3 py-1 text-[0.65rem]',
-      },
-    },
-    defaultVariants: { variant: 'default', size: 'md' },
-  }
-)
+const BADGE_STYLES: Record<string, React.CSSProperties> = {
+  default:  { background: 'rgba(26,43,75,0.10)', color: '#1a2b4b', border: '1px solid rgba(26,43,75,0.20)', borderRadius: 999 },
+  vivid:    { background: 'rgba(26,43,75,0.10)', color: '#1a2b4b', border: '1px solid rgba(26,43,75,0.20)', borderRadius: 999 },
+  success:  { background: 'rgba(34,197,94,0.10)', color: '#166534', border: '1px solid rgba(34,197,94,0.30)', borderRadius: 999 },
+  warning:  { background: 'rgba(245,158,11,0.10)', color: '#92400e', border: '1px solid rgba(245,158,11,0.30)', borderRadius: 999 },
+  warn:     { background: 'rgba(245,158,11,0.10)', color: '#92400e', border: '1px solid rgba(245,158,11,0.30)', borderRadius: 999 },
+  error:    { background: 'rgba(186,26,26,0.10)', color: '#ba1a1a', border: '1px solid rgba(186,26,26,0.30)', borderRadius: 999 },
+  sky:      { background: 'rgba(212,175,55,0.10)', color: '#8a6d00', border: '1px solid rgba(212,175,55,0.30)', borderRadius: 999 },
+  ghost:    { background: 'rgba(25,28,30,0.06)', color: '#44474e', border: '1px solid #c5c6cf', borderRadius: 999 },
+  outline:  { background: 'transparent', color: '#44474e', border: '1px solid #c5c6cf', borderRadius: 999 },
+}
 
-export interface BadgeProps
-  extends React.HTMLAttributes<HTMLSpanElement>,
-    VariantProps<typeof badgeVariants> {
+const SIZE_CLASSES: Record<string, string> = {
+  sm: 'px-2 py-0.5 text-[0.55rem]',
+  md: 'px-2.5 py-0.5 text-[0.6rem]',
+  lg: 'px-3 py-1 text-[0.65rem]',
+}
+
+export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
+  variant?: 'default' | 'vivid' | 'success' | 'warning' | 'warn' | 'error' | 'sky' | 'ghost' | 'outline'
+  size?: 'sm' | 'md' | 'lg'
   dot?: boolean
 }
 
-export function Badge({ variant, size, dot, children, className, ...props }: BadgeProps) {
+export function Badge({ variant = 'default', size = 'md', dot, children, className, style, ...props }: BadgeProps) {
   return (
-    <span className={cn(badgeVariants({ variant, size }), className)} {...props}>
+    <span
+      className={cn('inline-flex items-center gap-1.5 font-semibold tracking-widest uppercase', SIZE_CLASSES[size], className)}
+      style={{ ...BADGE_STYLES[variant], ...style }}
+      {...props}
+    >
       {dot && (
         <span
           className={cn(

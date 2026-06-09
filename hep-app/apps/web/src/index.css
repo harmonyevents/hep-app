@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Sora:wght@300;400;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Noto+Sans+Tamil:wght@300;400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Inter:wght@300;400;500;600;700&family=Sora:wght@300;400;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Noto+Sans+Tamil:wght@300;400;600;700&display=swap');
 
 @theme {
   --color-deep: #051C2C;
@@ -13,8 +13,14 @@
   --color-warn: #f59e0b;
   --color-error: #ef4444;
 
+  /* Design system navy/champagne palette */
+  --color-navy: #031635;
+  --color-navy-mid: #1a2b4b;
+  --color-champagne: #D4AF37;
+  --color-champagne-light: #fed65b;
+
   --font-display: 'Cormorant Garamond', Georgia, serif;
-  --font-body: 'Sora', sans-serif;
+  --font-body: 'Inter', 'Sora', sans-serif;
   --font-mono: 'Space Mono', monospace;
 }
 
@@ -22,9 +28,9 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
   body {
-    background-color: #FAFAF8;
-    color: #0D1B2A;
-    font-family: 'Sora', sans-serif;
+    background-color: #f7f9fb;
+    color: #191c1e;
+    font-family: 'Inter', 'Sora', sans-serif;
     overflow-x: hidden;
     line-height: 1.65;
   }
@@ -56,15 +62,20 @@
 
   .glass {
     background: rgba(255,255,255,0.70);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(0,0,0,0.08);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
   }
   .glass-dark {
-    background: rgba(13,27,42,0.96);
+    background: rgba(255,255,255,0.95);
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
   }
+  .radius-8 { border-radius: 8px; }
+  .surface-1 { background: #fff; border: 1px solid #E2E8F0; border-radius: 8px; }
   .border-vivid-subtle { border: 1px solid rgba(34,81,255,0.18); }
   .glow-vivid { box-shadow: 0 0 32px rgba(34,81,255,0.25); }
   .text-muted-hep { color: rgba(74,85,104,0.8); }

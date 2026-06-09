@@ -10,21 +10,22 @@ interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, '
 }
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ label, error, hint, prefix, suffix, className, id, ...props }, ref) => {
+  ({ label, error, hint, prefix, suffix, className, id, style, ...props }, ref) => {
     const inputId = id || `input-${label?.toLowerCase().replace(/\s+/g, '-')}`
     return (
       <div className="flex flex-col gap-1.5">
         {label && (
           <label
             htmlFor={inputId}
-            className="text-[0.68rem] font-semibold tracking-[0.2em] uppercase text-sky/80"
+            className="text-[0.68rem] font-semibold tracking-[0.2em] uppercase"
+            style={{ color: '#44474e' }}
           >
             {label}
           </label>
         )}
         <div className="relative flex items-center">
           {prefix && (
-            <span className="absolute left-3 text-muted-hep text-sm select-none pointer-events-none">
+            <span className="absolute left-3 text-sm select-none pointer-events-none" style={{ color: '#75777f' }}>
               {prefix}
             </span>
           )}
@@ -32,26 +33,31 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             ref={ref}
             id={inputId}
             className={cn(
-              'w-full bg-mid/40 border text-white placeholder-sky/35 font-body text-sm px-4 py-3',
-              'outline-none transition-all duration-200',
-              'focus:border-vivid/70 focus:bg-mid/60 focus:shadow-[0_0_0_3px_rgba(34,81,255,0.12)]',
-              'hover:border-white/20',
+              'w-full font-body text-sm px-4 py-3 outline-none transition-all duration-200',
               'disabled:opacity-40 disabled:cursor-not-allowed',
-              error ? 'border-error/60 focus:border-error' : 'border-white/10',
               prefix && 'pl-9',
               suffix && 'pr-10',
               className
             )}
+            style={{
+              background: '#ffffff',
+              border: error ? '1px solid #ba1a1a' : '1px solid #c5c6cf',
+              borderRadius: 8,
+              color: '#191c1e',
+              ...style,
+            }}
+            onFocus={e => { e.currentTarget.style.borderColor = '#031635'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(3,22,53,0.08)' }}
+            onBlur={e => { e.currentTarget.style.borderColor = error ? '#ba1a1a' : '#c5c6cf'; e.currentTarget.style.boxShadow = 'none' }}
             {...props}
           />
           {suffix && (
-            <span className="absolute right-3 text-muted-hep text-sm select-none pointer-events-none">
+            <span className="absolute right-3 text-sm select-none pointer-events-none" style={{ color: '#75777f' }}>
               {suffix}
             </span>
           )}
         </div>
-        {error && <p className="text-error text-[0.72rem] flex items-center gap-1">⚠ {error}</p>}
-        {hint && !error && <p className="text-muted-hep text-[0.72rem]">{hint}</p>}
+        {error && <p className="text-[0.72rem] flex items-center gap-1" style={{ color: '#ba1a1a' }}>⚠ {error}</p>}
+        {hint && !error && <p className="text-[0.72rem]" style={{ color: '#75777f' }}>{hint}</p>}
       </div>
     )
   }
@@ -65,14 +71,15 @@ interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement
 }
 
 export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
-  ({ label, error, hint, className, id, ...props }, ref) => {
+  ({ label, error, hint, className, id, style, ...props }, ref) => {
     const inputId = id || `textarea-${label?.toLowerCase().replace(/\s+/g, '-')}`
     return (
       <div className="flex flex-col gap-1.5">
         {label && (
           <label
             htmlFor={inputId}
-            className="text-[0.68rem] font-semibold tracking-[0.2em] uppercase text-sky/80"
+            className="text-[0.68rem] font-semibold tracking-[0.2em] uppercase"
+            style={{ color: '#44474e' }}
           >
             {label}
           </label>
@@ -82,17 +89,23 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
           id={inputId}
           rows={4}
           className={cn(
-            'w-full bg-mid/40 border text-white placeholder-sky/35 font-body text-sm px-4 py-3',
-            'outline-none transition-all duration-200 resize-none',
-            'focus:border-vivid/70 focus:bg-mid/60 focus:shadow-[0_0_0_3px_rgba(34,81,255,0.12)]',
-            'hover:border-white/20',
-            error ? 'border-error/60' : 'border-white/10',
+            'w-full font-body text-sm px-4 py-3 outline-none transition-all duration-200 resize-none',
+            error ? '' : '',
             className
           )}
+          style={{
+            background: '#ffffff',
+            border: error ? '1px solid #ba1a1a' : '1px solid #c5c6cf',
+            borderRadius: 8,
+            color: '#191c1e',
+            ...style,
+          }}
+          onFocus={e => { e.currentTarget.style.borderColor = '#031635'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(3,22,53,0.08)' }}
+          onBlur={e => { e.currentTarget.style.borderColor = error ? '#ba1a1a' : '#c5c6cf'; e.currentTarget.style.boxShadow = 'none' }}
           {...props}
         />
-        {error && <p className="text-error text-[0.72rem]">⚠ {error}</p>}
-        {hint && !error && <p className="text-muted-hep text-[0.72rem]">{hint}</p>}
+        {error && <p className="text-[0.72rem]" style={{ color: '#ba1a1a' }}>⚠ {error}</p>}
+        {hint && !error && <p className="text-[0.72rem]" style={{ color: '#75777f' }}>{hint}</p>}
       </div>
     )
   }
