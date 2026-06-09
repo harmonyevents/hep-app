@@ -81,7 +81,7 @@ export function Navbar() {
                   {active && (
                     <motion.span
                       layoutId="nav-indicator"
-                      className="absolute -bottom-0.5 left-0 right-0 h-px bg-vivid"
+                      className="absolute -bottom-0.5 left-0 right-0 h-px bg-gold"
                     />
                   )}
                 </Link>

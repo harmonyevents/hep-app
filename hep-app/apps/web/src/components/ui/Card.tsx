@@ -8,11 +8,11 @@ const cardVariants = cva(
   {
     variants: {
       variant: {
-        default: 'glass border border-white/8',
-        elevated: 'glass border border-white/8 shadow-[0_8px_40px_rgba(0,0,0,0.4)]',
-        vivid: 'glass border border-vivid/20 shadow-[0_0_24px_rgba(34,81,255,0.12)]',
-        flat: 'bg-transparent border border-white/10',
-        ghost: 'bg-white/3 border border-transparent',
+        default: 'glass border border-white/10',
+        elevated: 'glass border border-white/10 shadow-[0_8px_40px_rgba(0,0,0,0.4)]',
+        vivid: 'glass border border-vivid/25 shadow-[0_0_24px_rgba(34,81,255,0.12)]',
+        flat: 'bg-transparent border border-white/12',
+        ghost: 'bg-white/4 border border-transparent',
       },
     },
     defaultVariants: { variant: 'default' },

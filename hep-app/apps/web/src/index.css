@@ -8,6 +8,7 @@
   --color-vlight: #4D70FF;
   --color-sky: #BDD7EE;
   --color-gold: #C9A96E;
+  --color-gold-light: #E8C98A;
   --color-success: #22c55e;
   --color-warn: #f59e0b;
   --color-error: #ef4444;
@@ -139,12 +140,37 @@
   .animate-scale-in { animation: scale-in 0.4s ease forwards; }
 
   .text-gradient {
-    background: linear-gradient(135deg, #4D70FF 0%, #BDD7EE 55%, #2251FF 100%);
+    background: linear-gradient(135deg, #4D70FF 0%, #C9A96E 50%, #2251FF 100%);
     background-size: 200% 200%;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     animation: gradient-x 5s ease infinite;
+  }
+
+  .text-gradient-gold {
+    background: linear-gradient(135deg, #E8C98A 0%, #C9A96E 50%, #E8C98A 100%);
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradient-x 4s ease infinite;
+  }
+
+  .section-warm {
+    background: radial-gradient(ellipse 80% 60% at 50% 50%, rgba(201,169,110,0.04) 0%, transparent 70%);
+  }
+
+  .section-vivid-glow {
+    background: radial-gradient(ellipse 60% 50% at 50% 50%, rgba(34,81,255,0.06) 0%, transparent 70%);
+  }
+
+  .card-3d {
+    transform-style: preserve-3d;
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.4s ease;
+  }
+  .card-3d:hover {
+    box-shadow: 0 24px 64px rgba(0,0,0,0.5), 0 0 40px rgba(201,169,110,0.1);
   }
 
   .bg-vivid-gradient {

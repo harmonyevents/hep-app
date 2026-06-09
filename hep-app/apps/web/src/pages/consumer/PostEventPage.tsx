@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/Button'
 import { Input, Textarea } from '@/components/ui/Input'
 import { Badge } from '@/components/ui/Badge'
 import { SectionLabel } from '@/components/ui/SectionLabel'
+import { MapPicker } from '@/components/ui/MapPicker'
 import { EVENT_TYPES, VENDOR_CATEGORIES, AI_SUGGESTIONS } from '@/lib/constants'
 import type { EventType, VendorCategory } from '@/types'
 
@@ -40,6 +41,8 @@ export function PostEventPage() {
   const [aiSuggestions, setAiSuggestions] = useState<VendorCategory[]>([])
   const [checkedCats, setCheckedCats] = useState<VendorCategory[]>([])
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [venueLat, setVenueLat] = useState<number | null>(null)
+  const [venueLng, setVenueLng] = useState<number | null>(null)
 
   const { register, handleSubmit, watch, control, formState: { errors }, setValue, trigger } = useForm<FormData>({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -212,6 +215,22 @@ export function PostEventPage() {
                     error={errors.venue_address?.message}
                     {...register('venue_address')}
                   />
+                  <div>
+                    <p className="text-[0.68rem] font-semibold tracking-[0.2em] uppercase text-sky/80 mb-2">
+                      {isTa ? 'வரைபடத்தில் இடத்தை தேர்வு செய்யுங்கள்' : 'Pin location on map'}
+                    </p>
+                    <MapPicker
+                      onLocationSelect={(lat, lng, address) => {
+                        setVenueLat(lat)
+                        setVenueLng(lng)
+                        // Auto-fill address if empty
+                        const current = (document.querySelector('input[name="venue_address"]') as HTMLInputElement)?.value
+                        if (!current || current.trim() === '') {
+                          setValue('venue_address', address)
+                        }
+                      }}
+                    />
+                  </div>
                   <div className="space-y-2">
                     <label className="text-[0.68rem] font-semibold tracking-[0.2em] uppercase text-sky/80">
                       {isTa ? 'விருந்தினர்கள்' : 'Expected Guests'}: <span className="text-vivid">{guestCount}</span>
