@@ -62,11 +62,11 @@ export function VendorProfileSetupPage() {
   }
 
   return (
-    <div className="min-h-screen pt-24 pb-16 px-5">
+    <div style={{ background: '#F5F5F5', minHeight: '100vh' }} className="pt-24 pb-16 px-5">
       <div className="max-w-2xl mx-auto">
         <div className="mb-10">
           <SectionLabel>{isTa ? 'சுயவிவரம் உருவாக்கு' : 'Create Your Profile'}</SectionLabel>
-          <h1 className="font-display text-5xl font-light mb-2">
+          <h1 className="font-medium text-5xl font-light mb-2">
             {isTa ? 'சேவையாளராக' : 'List your'}
             <br />
             <em className="text-vivid not-italic">{isTa ? 'பட்டியலிடுக.' : 'business.'}</em>

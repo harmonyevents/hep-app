@@ -31,12 +31,12 @@ export function AdminDashboardPage() {
   ]
 
   return (
-    <div className="min-h-screen pt-24 pb-16 px-5">
+    <div style={{ background: '#F5F5F5', minHeight: '100vh' }} className="pt-24 pb-16 px-5">
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
           <SectionLabel>Admin</SectionLabel>
-          <h1 className="font-display text-5xl font-light">HE&P Control Centre</h1>
-          <p className="text-muted-hep text-sm mt-1">Platform intelligence for Harmony Events & Platform</p>
+          <h1 className="font-medium" style={{ fontSize: 'clamp(1.75rem, 3vw, 2.25rem)', letterSpacing: '-0.03em', color: '#0A0A0A' }}>HE&P Control Centre</h1>
+          <p className="text-sm mt-1" style={{ color: '#858585' }}>Platform intelligence for Harmony Events & Platform</p>
         </div>
 
         {/* Tab bar */}
@@ -66,17 +66,17 @@ export function AdminDashboardPage() {
               className="grid grid-cols-2 md:grid-cols-4 gap-3"
             >
               {[
-                { label: 'Total Events', value: MOCK_EVENTS.length.toString(), sub: 'All time', icon: '🎉', color: '' },
-                { label: 'Active Vendors', value: MOCK_VENDORS.length.toString(), sub: 'On platform', icon: '🛠️', color: 'text-vivid' },
-                { label: 'Commission Earned', value: `₹${(totalCommission / 1000).toFixed(1)}k`, sub: 'From bids', icon: '💰', color: 'text-success' },
-                { label: 'KYC Pending', value: kycQueue.length.toString(), sub: 'Needs review', icon: '⏳', color: 'text-warn' },
+                { label: 'Total Events', value: MOCK_EVENTS.length.toString(), sub: 'All time', icon: '🎉' },
+                { label: 'Active Vendors', value: MOCK_VENDORS.length.toString(), sub: 'On platform', icon: '🛠️' },
+                { label: 'Commission Earned', value: `₹${(totalCommission / 1000).toFixed(1)}k`, sub: 'From bids', icon: '💰' },
+                { label: 'KYC Pending', value: kycQueue.length.toString(), sub: 'Needs review', icon: '⏳' },
               ].map(s => (
                 <motion.div key={s.label} variants={fadeUp}>
-                  <Card className="p-5">
+                  <Card style={{ background: '#FFFFFF', borderRadius: 16, border: '1px solid #E4E4E4', padding: '1.5rem' }}>
                     <div className="text-2xl mb-3">{s.icon}</div>
-                    <div className={`font-display text-4xl font-light mb-1 ${s.color}`}>{s.value}</div>
-                    <div className="text-muted-hep text-xs uppercase tracking-wide">{s.label}</div>
-                    <div className="text-muted-hep text-[0.6rem] mt-0.5">{s.sub}</div>
+                    <div className="font-medium mb-1" style={{ color: '#D4AF37', fontSize: '2rem', fontWeight: 600 }}>{s.value}</div>
+                    <div style={{ color: '#858585', fontSize: '0.75rem', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{s.label}</div>
+                    <div className="mt-0.5" style={{ color: '#858585', fontSize: '0.75rem' }}>{s.sub}</div>
                   </Card>
                 </motion.div>
               ))}
@@ -84,7 +84,7 @@ export function AdminDashboardPage() {
 
             {/* Commission breakdown */}
             <Card className="p-6">
-              <h3 className="font-display text-xl font-light mb-5">Commission Tiers Active</h3>
+              <h3 className="font-medium text-xl font-light mb-5">Commission Tiers Active</h3>
               <div className="space-y-3">
                 {[
                   { label: 'Small events (up to ₹25k)', rate: '12%', count: 3, volume: '₹45k' },
@@ -115,7 +115,7 @@ export function AdminDashboardPage() {
 
             {/* Recent activity */}
             <div>
-              <h3 className="font-display text-xl font-light mb-4">Recent Activity</h3>
+              <h3 className="font-medium text-xl font-light mb-4">Recent Activity</h3>
               <div className="space-y-2">
                 {[
                   { icon: '🎉', text: 'New event posted: Priya & Karthik Wedding (budget ₹5L–₹12L)', time: '2 hours ago', type: 'event' },
@@ -138,7 +138,7 @@ export function AdminDashboardPage() {
         {tab === 'vendors' && (
           <div className="space-y-4">
             <div className="flex items-center justify-between mb-2">
-              <h2 className="font-display text-2xl font-light">All Vendors ({MOCK_VENDORS.length})</h2>
+              <h2 className="font-medium text-2xl font-light">All Vendors ({MOCK_VENDORS.length})</h2>
               <Button size="sm" variant="outline">Export CSV</Button>
             </div>
             {MOCK_VENDORS.map(vendor => (
@@ -148,7 +148,7 @@ export function AdminDashboardPage() {
                 className="glass border-vivid-subtle p-5 grid grid-cols-1 md:grid-cols-4 gap-4 items-center"
               >
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-vivid/20 rounded-full flex items-center justify-center font-display text-lg">
+                  <div className="w-10 h-10 bg-vivid/20 rounded-full flex items-center justify-center font-medium text-lg">
                     {vendor.business_name[0]}
                   </div>
                   <div>
@@ -183,7 +183,7 @@ export function AdminDashboardPage() {
         {tab === 'events' && (
           <div className="space-y-4">
             <div className="flex items-center justify-between mb-2">
-              <h2 className="font-display text-2xl font-light">All Events ({MOCK_EVENTS.length})</h2>
+              <h2 className="font-medium text-2xl font-light">All Events ({MOCK_EVENTS.length})</h2>
               <Button size="sm" variant="outline">Export CSV</Button>
             </div>
             {MOCK_EVENTS.map(event => {
@@ -224,13 +224,13 @@ export function AdminDashboardPage() {
         {tab === 'kyc' && (
           <div className="space-y-4">
             <div className="mb-2">
-              <h2 className="font-display text-2xl font-light mb-1">KYC Approval Queue</h2>
+              <h2 className="font-medium text-2xl font-light mb-1">KYC Approval Queue</h2>
               <p className="text-muted-hep text-sm">Review vendor identity documents before they go live on the platform.</p>
             </div>
             {kycQueue.length === 0 ? (
               <div className="glass border-vivid-subtle p-12 text-center">
                 <div className="text-4xl mb-4">✅</div>
-                <h3 className="font-display text-xl font-light">All caught up!</h3>
+                <h3 className="font-medium text-xl font-light">All caught up!</h3>
                 <p className="text-muted-hep text-sm mt-2">No pending KYC reviews.</p>
               </div>
             ) : (
@@ -238,7 +238,7 @@ export function AdminDashboardPage() {
                 <div key={vendor.id} className="glass border-vivid-subtle p-6">
                   <div className="flex items-start justify-between gap-4 mb-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 bg-warn/10 border border-warn/25 rounded-full flex items-center justify-center font-display text-2xl">
+                      <div className="w-12 h-12 bg-warn/10 border border-warn/25 rounded-full flex items-center justify-center font-medium text-2xl">
                         {vendor.business_name[0]}
                       </div>
                       <div>

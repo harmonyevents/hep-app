@@ -28,16 +28,16 @@ export function ConsumerDashboardPage() {
   ]
 
   return (
-    <div className="min-h-screen pt-24 pb-16 px-5">
+    <div style={{ background: '#F5F5F5', minHeight: '100vh' }} className="pt-24 pb-16 px-5">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex items-start justify-between mb-10">
           <div>
             <SectionLabel>{isTa ? 'டாஷ்போர்டு' : 'Dashboard'}</SectionLabel>
-            <h1 className="font-display text-5xl font-light">
+            <h1 className="font-medium" style={{ fontSize: 'clamp(1.75rem, 3vw, 2.25rem)', letterSpacing: '-0.03em', color: '#0A0A0A' }}>
               {isTa ? `வணக்கம், ${user?.name}` : `Hey, ${user?.name?.split(' ')[0]}.`}
             </h1>
-            <p className="text-muted-hep mt-2 text-sm">
+            <p className="mt-2 text-sm" style={{ color: '#858585' }}>
               {isTa ? 'உங்கள் நிகழ்வுகளை நிர்வகிக்கவும்.' : "Here's what's happening with your events."}
             </p>
           </div>
@@ -55,12 +55,12 @@ export function ConsumerDashboardPage() {
         >
           {stats.map(stat => (
             <motion.div key={stat.label} variants={fadeUp}>
-              <Card className={`p-5 ${stat.highlight ? 'border-vivid/40' : ''}`}>
+              <Card style={{ background: '#FFFFFF', borderRadius: 16, border: '1px solid #E4E4E4', padding: '1.5rem' }}>
                 <div className="text-2xl mb-3">{stat.icon}</div>
-                <div className={`font-display text-4xl font-light mb-1 ${stat.highlight ? 'text-vivid' : ''}`}>
+                <div className="font-medium mb-1" style={{ color: '#D4AF37', fontSize: '2rem', fontWeight: 600 }}>
                   {stat.value}
                 </div>
-                <div className="text-muted-hep text-xs tracking-wide uppercase">{stat.label}</div>
+                <div style={{ color: '#858585', fontSize: '0.75rem', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{stat.label}</div>
               </Card>
             </motion.div>
           ))}
@@ -70,7 +70,7 @@ export function ConsumerDashboardPage() {
           {/* Active events */}
           <div className="lg:col-span-2">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="font-display text-2xl font-light">{isTa ? 'செயலில் நிகழ்வுகள்' : 'Active Events'}</h2>
+              <h2 className="font-medium text-2xl font-light">{isTa ? 'செயலில் நிகழ்வுகள்' : 'Active Events'}</h2>
               <Link to="/consumer/events" className="text-vivid text-sm hover:text-vlight transition-colors no-underline">
                 {isTa ? 'அனைத்தும் காண்க' : 'View all'} →
               </Link>
@@ -112,7 +112,7 @@ export function ConsumerDashboardPage() {
           {/* Quick actions + notifications */}
           <div className="space-y-4">
             <div>
-              <h2 className="font-display text-2xl font-light mb-4">{isTa ? 'விரைவு நடவடிக்கைகள்' : 'Quick Actions'}</h2>
+              <h2 className="font-medium text-2xl font-light mb-4">{isTa ? 'விரைவு நடவடிக்கைகள்' : 'Quick Actions'}</h2>
               <div className="space-y-2">
                 {[
                   { to: '/consumer/post', icon: '📋', label: isTa ? 'நிகழ்வை பதிவிடுக' : 'Post New Event', desc: isTa ? 'AI உதவியுடன்' : 'With AI assistance' },

@@ -100,12 +100,12 @@ export function PostEventPage() {
   const guestCount = watch('guest_count')
 
   return (
-    <div className="min-h-screen pt-24 pb-16 px-5">
+    <div style={{ background: '#F5F5F5', minHeight: '100vh' }} className="pt-24 pb-16 px-5">
       <div className="max-w-3xl mx-auto">
         {/* Header */}
         <div className="mb-10">
           <SectionLabel>{isTa ? 'நிகழ்வை அறிவிக்கவும்' : 'Announce Your Event'}</SectionLabel>
-          <h1 className="font-display text-5xl font-light mb-2">
+          <h1 className="font-medium text-5xl font-light mb-2">
             {isTa ? 'உங்கள் நிகழ்வை' : 'Tell us about'}
             <br />
             <em className="text-vivid not-italic">{isTa ? 'திட்டமிடுங்கள்' : 'your event.'}</em>

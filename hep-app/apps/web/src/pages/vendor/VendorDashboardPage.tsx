@@ -31,13 +31,13 @@ export function VendorDashboardPage() {
   ]
 
   return (
-    <div className="min-h-screen pt-24 pb-16 px-5">
+    <div style={{ background: '#F5F5F5', minHeight: '100vh' }} className="pt-24 pb-16 px-5">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex items-start justify-between mb-8">
           <div>
             <SectionLabel>{isTa ? 'விற்பனையாளர் டாஷ்போர்டு' : 'Vendor Dashboard'}</SectionLabel>
-            <h1 className="font-display text-5xl font-light">
+            <h1 className="font-medium" style={{ fontSize: 'clamp(1.75rem, 3vw, 2.25rem)', letterSpacing: '-0.03em', color: '#0A0A0A' }}>
               {vendor.business_name}
             </h1>
             <div className="flex items-center gap-3 mt-2">
@@ -61,12 +61,12 @@ export function VendorDashboardPage() {
         >
           {stats.map(stat => (
             <motion.div key={stat.label} variants={fadeUp}>
-              <Card className={`p-5 ${stat.highlight ? 'border-vivid/35' : ''}`}>
+              <Card style={{ background: '#FFFFFF', borderRadius: 16, border: '1px solid #E4E4E4', padding: '1.5rem' }}>
                 <div className="text-2xl mb-3">{stat.icon}</div>
-                <div className={`font-display text-3xl font-light mb-1 ${stat.highlight ? 'text-vivid' : ''}`}>
+                <div className="font-medium mb-1" style={{ color: '#D4AF37', fontSize: '2rem', fontWeight: 600 }}>
                   {stat.value}
                 </div>
-                <div className="text-muted-hep text-xs tracking-wide">{stat.label}</div>
+                <div style={{ color: '#858585', fontSize: '0.75rem', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{stat.label}</div>
               </Card>
             </motion.div>
           ))}
@@ -90,7 +90,7 @@ export function VendorDashboardPage() {
           {/* Recent bids */}
           <div className="lg:col-span-2">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="font-display text-2xl font-light">{isTa ? 'என் சமீபத்திய ஏலங்கள்' : 'Recent Bids'}</h2>
+              <h2 className="font-medium text-2xl font-light">{isTa ? 'என் சமீபத்திய ஏலங்கள்' : 'Recent Bids'}</h2>
               <Link to="/vendor/bids" className="text-vivid text-sm hover:text-vlight no-underline">
                 {isTa ? 'அனைத்தும்' : 'View all'} →
               </Link>
@@ -107,7 +107,7 @@ export function VendorDashboardPage() {
                     <div className="text-muted-hep text-xs">Submitted 2 hours ago · Awaiting response</div>
                   </div>
                   <div className="text-right flex-shrink-0">
-                    <div className="font-display text-xl font-light">₹{bid.price.toLocaleString('en-IN')}</div>
+                    <div className="font-medium text-xl font-light">₹{bid.price.toLocaleString('en-IN')}</div>
                     <Badge variant="warn">{isTa ? 'காத்திருக்கிறது' : 'Pending'}</Badge>
                   </div>
                 </motion.div>
