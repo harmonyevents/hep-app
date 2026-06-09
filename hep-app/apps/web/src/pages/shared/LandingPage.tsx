@@ -125,13 +125,12 @@ function CyclicWord({ isTa }: { isTa: boolean }) {
 // ── Hero ───────────────────────────────────────────────────────────────────────
 function HeroSection({ isTa }: { isTa: boolean }) {
   return (
-    <div className="flex-1 px-6 pb-6 flex" style={{ paddingTop: 0 }}>
+    <div className="flex-1 px-6 pb-6 pt-3 flex">
       <div
         className="relative w-full rounded-2xl overflow-hidden flex flex-col"
         style={{
-          height: 'calc(100vh - 80px)',
+          height: 'calc(100vh - 36px)',
           background: 'linear-gradient(160deg, #031635 0%, #0F2340 55%, #031635 100%)',
-          marginTop: 80,
         }}
       >
         {/* Grid overlay */}

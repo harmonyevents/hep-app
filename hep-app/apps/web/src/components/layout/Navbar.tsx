@@ -60,16 +60,20 @@ export function Navbar() {
         ? { background: 'rgba(255,255,255,0.92)', borderBottom: '1px solid #E4E4E4', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)' }
         : { background: 'transparent' }}
       className={cn(
-        'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
+        'fixed top-0 inset-x-0 z-50 transition-all duration-300',
         scrolled ? 'py-3' : 'py-5'
       )}
     >
       <div className="max-w-7xl mx-auto px-5 sm:px-8 flex items-center justify-between gap-4">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2.5 no-underline group flex-shrink-0">
-          <svg viewBox="0 0 256 256" width="28" height="28" style={{ color: scrolled ? '#031635' : '#ffffff', flexShrink: 0 }} fill="currentColor">
-            <path d="M 128.005 191.173 C 128.448 156.208 156.93 128 192 128 L 192 64 L 128 64 C 128 99.346 99.346 128 64 128 L 64 192 L 128 192 Z M 192 256 L 64 256 C 28.654 256 0 227.346 0 192 L 0 64 L 64 64 L 64 0 L 192 0 C 227.346 0 256 28.654 256 64 L 256 192 L 192 192 Z" />
-          </svg>
+          <img
+            src="/logo_cropped.jpg"
+            alt="HE&P"
+            width={32}
+            height={32}
+            style={{ filter: scrolled ? 'brightness(0)' : 'brightness(0) invert(1)', flexShrink: 0 }}
+          />
           <span
             className="font-semibold text-sm transition-colors duration-200"
             style={{ color: scrolled ? '#031635' : '#ffffff', letterSpacing: '0.02em' }}
@@ -88,11 +92,11 @@ export function Navbar() {
                 className="relative text-sm font-medium transition-colors duration-200 no-underline py-1"
                 style={{
                   color: active
-                    ? (scrolled ? '#D4AF37' : '#D4AF37')
-                    : (scrolled ? '#858585' : 'rgba(255,255,255,0.70)'),
+                    ? '#D4AF37'
+                    : (scrolled ? '#3D3D3D' : 'rgba(255,255,255,0.85)'),
                 }}
                 onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.color = scrolled ? '#0A0A0A' : '#ffffff' }}
-                onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.color = active ? '#D4AF37' : (scrolled ? '#858585' : 'rgba(255,255,255,0.70)') }}
+                onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.color = active ? '#D4AF37' : (scrolled ? '#3D3D3D' : 'rgba(255,255,255,0.85)') }}
               >
                 {isTa ? link.ta : link.en}
                 {active && (
