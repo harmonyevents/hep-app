@@ -166,9 +166,12 @@ function HeroSection({ isTa }: { isTa: boolean }) {
       {/* Blue glow top-left */}
       <div className="absolute top-0 left-0 w-[400px] h-[400px] pointer-events-none" style={{ zIndex: 1,
         background: 'radial-gradient(circle, rgba(34,81,255,0.12) 0%, transparent 70%)' }} />
-      {/* Fade to white at bottom */}
-      <div className="absolute bottom-0 left-0 right-0 h-40 pointer-events-none" style={{ zIndex: 2,
-        background: `linear-gradient(to bottom, transparent, ${BG})` }} />
+      {/* Full-width diagonal slice — hero cuts cleanly into cream section */}
+      <div className="absolute bottom-0 left-0 right-0 pointer-events-none overflow-hidden" style={{ zIndex: 2 }}>
+        <svg viewBox="0 0 1440 72" preserveAspectRatio="none" style={{ width: '100%', height: 72, display: 'block' }}>
+          <polygon points="0,32 1440,0 1440,72 0,72" fill={BG_CREAM} />
+        </svg>
+      </div>
 
       <motion.div style={{ y: heroY, opacity: heroOpacity, position: 'relative', zIndex: 10 }}
         className="max-w-7xl mx-auto px-6 w-full"
@@ -314,7 +317,7 @@ function MarqueeTicker({ isTa }: { isTa: boolean }) {
     i < items.length - 1 ? [item, <span key={`s${i}`} className="w-px h-3 flex-shrink-0" style={{ background: GOLD_25 }} />] : [item]
   )
   return (
-    <div className="py-3.5 overflow-hidden" style={{ background: BG_CREAM, borderTop: `1px solid ${GOLD_15}`, borderBottom: `1px solid ${GOLD_15}` }}>
+    <div className="py-3.5 overflow-hidden" style={{ background: BG_CREAM, borderBottom: `1px solid ${GOLD_15}` }}>
       <Marquee speed={35} gap="2.5rem">{withSeps}</Marquee>
     </div>
   )
@@ -648,9 +651,16 @@ function VendorSection({ isTa }: { isTa: boolean }) {
 // ── CTA ───────────────────────────────────────────────────────────────────────
 function CTASection({ isTa }: { isTa: boolean }) {
   return (
-    <section className="py-32 px-6 relative overflow-hidden"
+    <section className="relative overflow-hidden"
       style={{ background: TXT }}
     >
+      {/* Angled entry — white section slices into dark CTA */}
+      <div className="pointer-events-none overflow-hidden" style={{ lineHeight: 0 }}>
+        <svg viewBox="0 0 1440 72" preserveAspectRatio="none" style={{ width: '100%', height: 72, display: 'block' }}>
+          <polygon points="0,0 1440,40 1440,0" fill={BG} />
+        </svg>
+      </div>
+      <div className="py-28 px-6 relative">
       {/* Gold glow center */}
       <div className="absolute inset-0 pointer-events-none" style={{ background: `radial-gradient(ellipse 55% 70% at 50% 55%, ${GOLD_8} 0%, transparent 70%)` }} />
       <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full pointer-events-none"
@@ -714,6 +724,7 @@ function CTASection({ isTa }: { isTa: boolean }) {
             : 'Secured by Razorpay · GSTIN: 33AAICH6273M1Z6 · Built in Chennai, Tamil Nadu'}
         </motion.p>
       </div>
+      </div>{/* close py-28 wrapper */}
     </section>
   )
 }
